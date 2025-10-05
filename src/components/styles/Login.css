@@ -1,0 +1,47 @@
+.login-form{
+    padding: 25px 35px;
+    border-radius: 10px;
+    width: 330px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.login-form label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+.login-form input {
+    width: 85%;
+    margin: 0 auto;
+    padding: 14px 25px;
+    border-radius:6px;
+    border: 1px solid #ccc;
+    outline: none;
+    color: #000;
+}
+p{
+  font-size: 24px;
+}
+.login-form input::placeholder {
+    color: #333;
+}
+.login-form p {
+    font-size: 14px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.login-container span {
+  color: #f39c12;
+  cursor: pointer;
+}
+.login-container span:hover {
+  text-decoration: underline;
+}
+
+.forget-password{
+  color: black;
+  text-align: end;
+  font-size: 32px;
+  cursor: pointer;
+}

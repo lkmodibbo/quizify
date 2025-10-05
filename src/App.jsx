@@ -1,11 +1,11 @@
 import './App.css'
+import QuizHome from './components/QuizHome'
 
 function App() {
   
   return (
     <div>
-      <h1>Welcome to Quizify 🎯</h1>
-      <p>Your interactive quiz app is coming soon!</p>
+      <QuizHome />
     </div>
   )
 }
