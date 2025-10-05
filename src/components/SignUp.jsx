@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../components/styles/SignUp.css';
 
 const SignUp = ({ onSwitchToLogin }) => {
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -11,18 +12,34 @@ const SignUp = ({ onSwitchToLogin }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (formData.password !== formData.confirmPassword){
+      setError("Password do not match")
+      return;
+    }
     console.log("SignUp Submitted:", formData);
+    setFormData({
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: ""
+    });
+    setError("");
+    alert("Sign-up successfull")
   };
 
   return (
     <form className='signup-form' onSubmit={handleSubmit}>
+      {error && <p className='error-text'>{error}</p>}
       <div>
-        <label htmlFor="fullname">Full Name</label>
         <input 
           type="text"
           id="fullname"
@@ -35,7 +52,6 @@ const SignUp = ({ onSwitchToLogin }) => {
       </div>
 
       <div>
-        <label htmlFor="email">Email</label>
         <input 
           type="email"
           id="email"
@@ -48,7 +64,6 @@ const SignUp = ({ onSwitchToLogin }) => {
       </div>
 
       <div>
-        <label htmlFor="password">Password</label>
         <input 
           type="password"
           id="password"
@@ -61,7 +76,6 @@ const SignUp = ({ onSwitchToLogin }) => {
       </div>
 
       <div>
-        <label htmlFor="confirmPassword">Confirm Password</label>
         <input 
           type="password"
           id="confirmPassword"

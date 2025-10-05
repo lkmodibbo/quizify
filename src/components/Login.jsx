@@ -25,12 +25,11 @@ const Login = ({ onSwitchToSignup }) => {
   return (
     <form className="login-form" onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="email">Email</label>
         <input
           type="email"
           id="email"
           name="email"  
-          placeholder="Email"
+          placeholder="Email or Username"
           value={formData.email}
           onChange={handleChange}
           required
@@ -38,7 +37,6 @@ const Login = ({ onSwitchToSignup }) => {
       </div>
 
       <div>
-        <label htmlFor="password">Password</label>
         <input
           type="password"
           id="password"
