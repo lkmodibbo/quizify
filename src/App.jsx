@@ -4,9 +4,12 @@ import QuizHome from './components/QuizHome'
 function App() {
   
   return (
-    <div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<QuizHome /> />
       <QuizHome />
-    </div>
+      </Routes>
+    </Router>
   )
 }
 

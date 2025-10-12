@@ -1,54 +1,58 @@
-import React, { useState } from 'react';
+import React from 'react';
 import '../components/styles/SignUp.css';
+import * as Yup from "yup"
+import { useFormik } from 'formik';
 
-const SignUp = ({ onSwitchToLogin }) => {
-  const [error, setError] = useState("");
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
+const SignUpSchema = Yup.object({
+  username: Yup.string()
+    .min(3, "Name must be at least 3 characters")
+    .required("Full name is required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("email is required"),
+  password: Yup.string()
+    .min(8, "Password must be at least 8 characters")
+    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .matches(/[0-9]/, "Password must contain at least one number")
+    .required("password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Password do not match")
+    .required("Confirm your password")
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (formData.password !== formData.confirmPassword){
-      setError("Password do not match")
-      return;
-    }
-    console.log("SignUp Submitted:", formData);
-    setFormData({
+const SignUp = ({ onSwitchToLogin }) => {
+  const formik = useFormik({
+    initialValues: {
       username: "",
       email: "",
       password: "",
       confirmPassword: ""
-    });
-    setError("");
-    alert("Sign-up successfull")
-  };
+    },
+    validationSchema: SignUpSchema,
+    onSubmit: (values, { resetForm }) => {
+      console.log("SignUp submitted:", values);
+      alert("Sign-up successful")
+      resetForm();
+    }
+  })
 
   return (
-    <form className='signup-form' onSubmit={handleSubmit}>
-      {error && <p className='error-text'>{error}</p>}
+    <form className='signup-form' onSubmit={formik.handleSubmit}>
+      {/* {error && <p className='error-text'>{error}</p>} */}
       <div>
         <input 
           type="text"
           id="fullname"
           name="username"
           placeholder="Enter Your Full Name"
-          value={formData.username}
-          onChange={handleChange}
+          value={formik.values.username}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           required
         />
+        {formik.touched.username && formik.errors.username && (
+          <p className='error-text'>{formik.errors.username}</p>
+        )}
       </div>
 
       <div>
@@ -57,10 +61,14 @@ const SignUp = ({ onSwitchToLogin }) => {
           id="email"
           name="email"
           placeholder="Enter Your Email"
-          value={formData.email}
-          onChange={handleChange}
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           required
         />
+        {formik.touched.email && formik.errors.email && (
+          <p className='error-text'>{formik.errors.email}</p>
+        )}
       </div>
 
       <div>
@@ -69,10 +77,14 @@ const SignUp = ({ onSwitchToLogin }) => {
           id="password"
           name="password"
           placeholder="Enter Your Password"
-          value={formData.password}
-          onChange={handleChange}
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           required
         />
+        {formik.touched.password && formik.errors.password && (
+          <p className='error-text'>{formik.errors.password}</p>
+        )}
       </div>
 
       <div>
@@ -81,10 +93,14 @@ const SignUp = ({ onSwitchToLogin }) => {
           id="confirmPassword"
           name="confirmPassword"
           placeholder="Confirm Your Password"
-          value={formData.confirmPassword}
-          onChange={handleChange}
+          value={formik.values.confirmPassword}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           required
         />
+        {formik.touched.confirmPassword && formik.errors.confirmPassword && (
+          <p className='error-text'>{formik.errors.confirmPassword}</p>
+        )}
       </div>
 
       <button type='submit' className='signin-btn'>Sign Up</button>

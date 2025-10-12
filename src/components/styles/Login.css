@@ -30,6 +30,10 @@ p{
     font-size: 14px;
     margin-left: 10px;
     cursor: pointer;
+    text-decoration: none;
+}
+.login-form a {
+  text-decoration: none;
 }
 .login-container span {
   color: #f39c12;
@@ -44,4 +48,10 @@ p{
   text-align: end;
   font-size: 32px;
   cursor: pointer;
+ 
+}
+.error-text {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 4px;
 }
