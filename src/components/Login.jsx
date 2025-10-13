@@ -2,6 +2,7 @@ import React from 'react'
 import { useFormik } from 'formik'
 import * as Yup from "yup";
 import '../components/styles/Login.css'
+import { Link } from 'react-router-dom';
 
 
 const LoginSchema = Yup.object({
@@ -70,8 +71,10 @@ const Login = ({ onSwitchToSignup }) => {
         </p>
       </div>
 
-      <button className="sign-in" type="submit">Sign In</button>
-
+        <Link to="/setup" className='sign-in-link'>
+            <button className="sign-in" type="submit">Sign In</button>
+        </Link>
+        
       <p className="switch-text">
         Don’t have an account?{" "}
         <a href="#" onClick={onSwitchToSignup}>Sign up here!</a>

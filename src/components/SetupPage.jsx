@@ -1,23 +1,34 @@
 import React from 'react';
-import { useFormik } from 'formik'; // Assuming Formik is used
-import { useNavigate } from 'react-router-dom'; // Assuming react-router-dom is used
-import * as Yup from 'yup'; // Assuming Yup is used for validation
+import { useFormik } from 'formik';
+import { Link, useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
+import Navbar from './Navbar';
+import './styles/SetupPage.css'; // 👈 Import your CSS here
 
-// --- External Dependencies Mock (Replace with your actual data/context) ---
-// This is your data source for quiz questions
 const SAMPLE = [
   { id: 1, question: 'What is a noun?', options: ['...', '...'], answer: 0, difficulty: 'easy' },
   { id: 2, question: 'Define photosynthesis.', options: ['...', '...'], answer: 0, difficulty: 'medium' },
   { id: 3, question: 'Advanced calculus query.', options: ['...', '...'], answer: 0, difficulty: 'hard' },
-  // ... many more questions
+  { id: 4, question: 'What is a noun?', options: ['...', '...'], answer: 0, difficulty: 'easy' },
+  { id: 5, question: 'Define photosynthesis.', options: ['...', '...'], answer: 0, difficulty: 'medium' },
+  { id: 6, question: 'Advanced calculus query.', options: ['...', '...'], answer: 0, difficulty: 'hard' },
+  { id: 7, question: 'What is a noun?', options: ['...', '...'], answer: 0, difficulty: 'easy' },
+  { id: 8, question: 'Define photosynthesis.', options: ['...', '...'], answer: 0, difficulty: 'medium' },
+  { id: 9, question: 'Advanced calculus query.', options: ['...', '...'], answer: 0, difficulty: 'hard' },
+  { id: 10, question: 'What is a noun?', options: ['...', '...'], answer: 0, difficulty: 'easy' },
+  { id: 11, question: 'Define photosynthesis.', options: ['...', '...'], answer: 0, difficulty: 'medium' },
+  { id: 12, question: 'Advanced calculus query.', options: ['...', '...'], answer: 0, difficulty: 'hard' },
+  { id: 13, question: 'What is a noun?', options: ['...', '...'], answer: 0, difficulty: 'easy' },
+  { id: 14, question: 'Define photosynthesis.', options: ['...', '...'], answer: 0, difficulty: 'medium' },
+  { id: 15, question: 'Advanced calculus query.', options: ['...', '...'], answer: 0, difficulty: 'hard' },
+  { id: 16, question: 'What is a noun?', options: ['...', '...'], answer: 0, difficulty: 'easy' },
+  { id: 17, question: 'Define photosynthesis.', options: ['...', '...'], answer: 0, difficulty: 'medium' },
+  { id: 18, question: 'Advanced calculus query.', options: ['...', '...'], answer: 0, difficulty: 'hard' },
+
 ];
-// ------------------------------------------------------------------------
 
 export default function SetupPage() {
-  // 1. HOOKS and Initial Setup
   const navigate = useNavigate();
-
-  // 2. Form Validation Schema (using Yup)
   const validationSchema = Yup.object({
     name: Yup.string().required('Name is required'),
     subject: Yup.string().required('Subject is required'),
@@ -28,7 +39,6 @@ export default function SetupPage() {
       .required('Number of questions is required'),
   });
 
-  // 3. Formik Initialization
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -36,59 +46,47 @@ export default function SetupPage() {
       difficulty: 'medium',
       numQuestions: 5,
     },
-    validationSchema: validationSchema,
+    validationSchema,
     onSubmit: (values) => {
-      // 4. Submission Logic
-      // For demo, we slice the local SAMPLE data based on user input.
-      // In a real app, this is where you'd make an API call to fetch specific questions.
       const questions = SAMPLE.slice(0, Number(values.numQuestions));
-
-      // Navigate to the quiz page, passing settings and the question set
       navigate('/quiz', { state: { settings: values, questions } });
     },
   });
 
-  // 5. RENDER LOGIC (JSX)
   return (
-    <div className="page layout-two-col">
-      {/* --- Main Setup Panel --- */}
-      <section className="panel">
-        <h2 className="title">
-          Welcome, **{formik.values.name || 'Student'}** 👋
-        </h2>
+    <div className="setup-page">
+      <Navbar />
+      <section className="setup-card">
+        <div className="back-to-login">
+          <p className='switch-text'>
+          <Link to="/">Back to Login</Link>
+        </p>
+        </div>
+        <h2 className="title">Welcome, {formik.values.name || 'Student'} 👋</h2>
         <p className="muted">Fill the form below to start your quiz.</p>
 
-        <form onSubmit={formik.handleSubmit} className="form">
-          {/* Input: Your name */}
+        <form onSubmit={formik.handleSubmit} className="setup-form">
+
           <label>
-            Your name
-            <input
-              name="name"
-              value={formik.values.name}
+            Select Subject
+            <select 
+              name="select-subject"
+              value={formik.values.selectSubject}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-            />
-            {formik.touched.name && formik.errors.name && (
-              <div className="error">{formik.errors.name}</div>
+            >
+              <option value="" disabled>Select Subject</option>
+              <option value="english">English</option>
+              <option value="maths">Mathematics</option>
+              <option value="basic-science">Basic Science</option>
+              <option value="computer">Computer</option>
+              <option value="social-values">National Values</option>
+            </select>
+            {formik.touched.selectSubject && formik.errors.selectSubject && (
+              <div className="error">{formik.errors.selectSubject}</div>
             )}
           </label>
 
-          {/* Input: Subject */}
-          <label>
-            Subject
-            <input
-              name="subject"
-              value={formik.values.subject}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              placeholder="e.g. English"
-            />
-            {formik.touched.subject && formik.errors.subject && (
-              <div className="error">{formik.errors.subject}</div>
-            )}
-          </label>
-
-          {/* Select: Difficulty */}
           <label>
             Difficulty
             <select
@@ -107,14 +105,13 @@ export default function SetupPage() {
             )}
           </label>
 
-          {/* Input: Number of questions */}
           <label>
             Number of questions
             <input
               type="number"
               name="numQuestions"
               min="1"
-              max={SAMPLE.length} // Dynamic max based on available questions
+              max={SAMPLE.length}
               value={formik.values.numQuestions}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -124,26 +121,14 @@ export default function SetupPage() {
             )}
           </label>
 
-          <button type="submit" className="primary">
+          <button type="submit" className="primary-btn">
             Start Quiz
           </button>
         </form>
+
       </section>
 
-      {/* --- Side Preview Panel --- */}
-      <aside className="panel panel-preview">
-        <h3 className="title-sm">Preview</h3>
-        <p className="muted">A short preview of questions will appear when you start the quiz.</p>
-        <div className="preview-card">
-          <h4>Q1. What is a noun?</h4>
-          <ul>
-            <li>Is a name of person, place, animal or thing</li>
-            <li>An action word</li>
-            <li>A describing word</li>
-            <li>A joining word</li>
-          </ul>
-        </div>
-      </aside>
+      {/* Sidebar commented out - do not style */}
     </div>
   );
 }

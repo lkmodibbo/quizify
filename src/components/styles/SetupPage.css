@@ -1,0 +1,136 @@
+.setup-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f4f6fb;
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+}
+
+.setup-card {
+  background: #fff;
+  padding: 40px 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  font-size: 22px;
+  margin-bottom: 0px;
+  color: #333;
+}
+
+.muted {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.setup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  font-weight: 500;
+  color: #444;
+}
+
+input,
+select {
+  margin-top: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: #007bff;
+}
+
+.error {
+  color: #d9534f;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.primary-btn {
+  width: 100px;
+  margin: 0 auto;
+  background: #007bff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.primary-btn:hover {
+  background: #0056b3;
+}
+
+.switch-text {
+  margin-top: 15px;
+  text-align: justify;
+  align-items: start;
+}
+
+.switch-text a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.switch-text a:hover {
+  text-decoration: underline;
+}
+.back-to-login {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.back-to-login .switch-text a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.back-to-login .switch-text a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+.back-to-login {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.back-to-login .switch-text a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.back-to-login .switch-text a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}

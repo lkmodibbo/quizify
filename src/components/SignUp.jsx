@@ -2,6 +2,7 @@ import React from 'react';
 import '../components/styles/SignUp.css';
 import * as Yup from "yup"
 import { useFormik } from 'formik';
+import { Link } from 'react-router-dom';
 
 const SignUpSchema = Yup.object({
   username: Yup.string()
@@ -102,9 +103,9 @@ const SignUp = ({ onSwitchToLogin }) => {
           <p className='error-text'>{formik.errors.confirmPassword}</p>
         )}
       </div>
-
-      <button type='submit' className='signin-btn'>Sign Up</button>
-
+        <Link to="/setup" className='sign-up-link'>
+            <button type='submit' className='signin-btn'>Sign Up</button>
+        </Link>
       <p className='switch-text'>
         Already have an account?{" "}
         <span onClick={onSwitchToLogin}>Login here</span>
