@@ -121,14 +121,15 @@ export default function SetupPage() {
             )}
           </label>
 
-          <button type="submit" className="primary-btn">
-            Start Quiz
+            <Link to="/quiz-page">
+          <button 
+             type="submit" className="primary-btn">   
+              Start Quiz
           </button>
+            </Link>
         </form>
 
       </section>
-
-      {/* Sidebar commented out - do not style */}
     </div>
   );
 }
