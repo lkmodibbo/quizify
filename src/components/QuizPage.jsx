@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import './styles/QuizPage.css';
+import Navbar from './Navbar';
 
 function QuizPage({ onQuit }) {
   const location = useLocation();
@@ -17,9 +18,6 @@ function QuizPage({ onQuit }) {
     return () => clearInterval(timer);
   }, []);
 
-  // const currentQuestion = questions?.[currentIndex];
-  // if (!currentQuestion) return <p>Loading...</p>;
-
   const formatTime = (seconds) => {
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
@@ -33,6 +31,44 @@ function QuizPage({ onQuit }) {
         question: "What is the capital of Nigeria?",
         options: ["Abuja", "Lagos", "Kano", "Ibadan"],
       },
+      {
+        question: "What is the capital of Nigeria?",
+        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
+      },
+      {
+        question: "What is the capital of Nigeria?",
+        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
+      },
+      {
+        question: "What is the capital of Nigeria?",
+        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
+      },
+      {
+        question: "What is the capital of Nigeria?",
+        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
+      },
+      {
+        question: "What is the capital of Nigeria?",
+        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
+      },
+
+      {
+        question: "What is the capital of Nigeria?",
+        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
+      },
+      {
+        question: "What is the capital of Nigeria?",
+        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
+      },
+
+      {
+        question: "What is the capital of Nigeria?",
+        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
+      },
+      {
+        question: "What is the capital of Nigeria?",
+        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
+      }
     ];
   const currentQuestion = safeQuestions[currentIndex]
 
@@ -55,6 +91,8 @@ function QuizPage({ onQuit }) {
   };
 
   return (
+    <>
+     <Navbar />
     <div className='quiz-container'>
       <div className="quiz-header">
         <h2>{selectedSubject} Quiz</h2>
@@ -86,9 +124,11 @@ function QuizPage({ onQuit }) {
           Next
         </button>
       </div>
-
-      <button className='quit-btn' onClick={onQuit}>Submit Quiz</button>
+          <div className='submit-btn'>
+            <button className='quit-btn' onClick={onQuit}>Submit Quiz</button>
+          </div>
     </div>
+    </>
   );
 }
 

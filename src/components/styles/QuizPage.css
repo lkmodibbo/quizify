@@ -1,69 +1,67 @@
 .quiz-container {
-  width: 80%;
-  max-width: 600px;
-  margin: 50px auto;
-  background: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 25px;
-  text-align: center;
-  font-family: 'Poppins', sans-serif;
+  background: #f9fafb;
+  width: 100%;
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  color: #333;
 }
 
 .quiz-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #2563EB;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+}
+
+.quiz-header h2 {
+  font-size: 1.8rem;
+  color: #2563eb;
 }
 
 .timer {
-  background: #1e40af;
-  padding: 6px 12px;
-  border-radius: 8px;
+  background: #2563eb;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 10px;
   font-weight: bold;
 }
 
-.question-section h3 {
-  color: #2563EB;
-  font-weight: bold;
+.question-section {
+  margin-bottom: 30px;
 }
 
 .question-text {
-  font-size: 1.1rem;
-  margin: 10px 0 20px;
-  color: #333;
+  font-size: 1.2rem;
+  margin: 15px 0;
 }
 
 .options {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
 }
 
 .option-btn {
-  background: #f3f4f6;
-  border: 2px solid #2563EB;
-  border-radius: 10px;
-  padding: 10px;
+  background: #fff;
+  border: 2px solid #2563eb;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 16px;
+  transition: 0.3s;
 }
 
 .option-btn:hover {
-  background: #2563EB;
+  background: #2563eb;
   color: #fff;
 }
 
 .option-btn.selected {
-  background: #2563EB;
+  background: #2563eb;
   color: #fff;
-  border-color: #1e40af;
 }
 
 .quiz-footer {
@@ -72,38 +70,32 @@
   margin-top: 20px;
 }
 
-.nav-btn {
-  background: #2563EB;
+.nav-btn,
+.quit-btn {
+  background: #2563eb;
   color: #fff;
   border: none;
+  padding: 12px 20px;
   border-radius: 10px;
-  padding: 10px 20px;
+  font-size: 16px;
   cursor: pointer;
-  font-size: 15px;
-  transition: 0.3s ease;
-}
-
-.nav-btn:hover {
-  background: #1e40af;
+  transition: 0.3s;
 }
 
 .nav-btn:disabled {
-  background: #9ca3af;
+  background: #a5b4fc;
   cursor: not-allowed;
 }
-
-.quit-btn {
-  margin-top: 20px;
-  background: #ef4444;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 25px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s ease;
+.submit-btn{
+  display: flex;
+  margin: 0 auto;
 }
-
-.quit-btn:hover {
+.quit-btn {
+  width: 200px;
+  margin: 0 auto;
+  margin-top: 25px;
   background: #dc2626;
+}
+.quit-btn:hover {
+  background: #b91c1c;
 }
