@@ -1,43 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import Navbar from './Navbar';
-import './styles/SetupPage.css'; // 👈 Import your CSS here
+import './styles/SetupPage.css'; 
 
-const SAMPLE = [
-  { id: 1, question: 'What is a noun?', options: ['...', '...'], answer: 0, difficulty: 'easy' },
-  { id: 2, question: 'Define photosynthesis.', options: ['...', '...'], answer: 0, difficulty: 'medium' },
-  { id: 3, question: 'Advanced calculus query.', options: ['...', '...'], answer: 0, difficulty: 'hard' },
-  { id: 4, question: 'What is a noun?', options: ['...', '...'], answer: 0, difficulty: 'easy' },
-  { id: 5, question: 'Define photosynthesis.', options: ['...', '...'], answer: 0, difficulty: 'medium' },
-  { id: 6, question: 'Advanced calculus query.', options: ['...', '...'], answer: 0, difficulty: 'hard' },
-  { id: 7, question: 'What is a noun?', options: ['...', '...'], answer: 0, difficulty: 'easy' },
-  { id: 8, question: 'Define photosynthesis.', options: ['...', '...'], answer: 0, difficulty: 'medium' },
-  { id: 9, question: 'Advanced calculus query.', options: ['...', '...'], answer: 0, difficulty: 'hard' },
-  { id: 10, question: 'What is a noun?', options: ['...', '...'], answer: 0, difficulty: 'easy' },
-  { id: 11, question: 'Define photosynthesis.', options: ['...', '...'], answer: 0, difficulty: 'medium' },
-  { id: 12, question: 'Advanced calculus query.', options: ['...', '...'], answer: 0, difficulty: 'hard' },
-  { id: 13, question: 'What is a noun?', options: ['...', '...'], answer: 0, difficulty: 'easy' },
-  { id: 14, question: 'Define photosynthesis.', options: ['...', '...'], answer: 0, difficulty: 'medium' },
-  { id: 15, question: 'Advanced calculus query.', options: ['...', '...'], answer: 0, difficulty: 'hard' },
-  { id: 16, question: 'What is a noun?', options: ['...', '...'], answer: 0, difficulty: 'easy' },
-  { id: 17, question: 'Define photosynthesis.', options: ['...', '...'], answer: 0, difficulty: 'medium' },
-  { id: 18, question: 'Advanced calculus query.', options: ['...', '...'], answer: 0, difficulty: 'hard' },
-
-];
 
 export default function SetupPage() {
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+console.log("BASE_URL =", BASE_URL);
+
+
   const navigate = useNavigate();
   const validationSchema = Yup.object({
-    name: Yup.string().required('Name is required'),
     subject: Yup.string().required('Subject is required'),
     difficulty: Yup.string().required('Difficulty is required'),
     numQuestions: Yup.number()
       .min(1, 'Must be at least 1 question')
-      .max(SAMPLE.length, `Max questions is ${SAMPLE.length}`)
+      .max(20, `Max questions is 20`)
       .required('Number of questions is required'),
   });
+  const fetchQuestions = async (values) => {
+    const category = getCategory(values.subject)
+    const url = `${BASE_URL}?amount=${values.numQuestions}&category=${category}&difficulty=${values.difficulty}&type=multiple`;
+    
+    const response = await fetch(url);
+    const data = await response.json()
+    return data.results;
+    }
 
   const formik = useFormik({
     initialValues: {
@@ -47,12 +41,54 @@ export default function SetupPage() {
       numQuestions: 5,
     },
     validationSchema,
-    onSubmit: (values) => {
-      const questions = SAMPLE.slice(0, Number(values.numQuestions));
-      navigate('/quiz', { state: { settings: values, questions } });
+    onSubmit: async (values) => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const data = await fetchQuestions(values)
+
+        if (data.length === 0) {
+          throw new Error('No questions found for this selection')
+        }
+
+        const formattedQuestions = data.results.map((q) => ({
+          question: decodeHTML(q.question),
+          options: shuffleArray([
+            ...q.incorrect_answers.map(decodeHTML),
+            decodeHTML(q.correct_answer)
+          ]),
+            correct_answer: decodeHTML(q.correct_answer)
+        }));
+
+        navigate('/quiz-page', { state: { settings: values, questions: formattedQuestions}})
+      } catch (err) {
+        console.log(err)
+        setError(err.message || 'Failed to fetch questions')
+      } finally {
+        setLoading(false)
+      }
     },
   });
 
+  const getCategory = (subject) => {
+    const categories = {
+      english: 10,
+      maths: 19,
+      'basic-science' : 17,
+      computer: 18,
+      'social-values' : 22,
+    };
+    return categories[subject] || 9;
+  };
+
+  const decodeHTML = (text) => {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+  }
+
+  const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
   return (
     <div className="setup-page">
       <Navbar />
@@ -70,8 +106,8 @@ export default function SetupPage() {
           <label>
             Select Subject
             <select 
-              name="select-subject"
-              value={formik.values.selectSubject}
+              name="subject"
+              value={formik.values.subject}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             >
@@ -82,8 +118,8 @@ export default function SetupPage() {
               <option value="computer">Computer</option>
               <option value="social-values">National Values</option>
             </select>
-            {formik.touched.selectSubject && formik.errors.selectSubject && (
-              <div className="error">{formik.errors.selectSubject}</div>
+            {formik.touched.subject && formik.errors.subject && (
+              <div className="error">{formik.errors.subject}</div>
             )}
           </label>
 
@@ -111,7 +147,7 @@ export default function SetupPage() {
               type="number"
               name="numQuestions"
               min="1"
-              max={SAMPLE.length}
+              max="20"
               value={formik.values.numQuestions}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -120,13 +156,14 @@ export default function SetupPage() {
               <div className="error">{formik.errors.numQuestions}</div>
             )}
           </label>
-
-            <Link to="/quiz-page">
           <button 
-             type="submit" className="primary-btn">   
-              Start Quiz
+             type="submit" 
+             className="primary-btn"
+             disabled={loading}
+             >   
+             {loading ? 'Loading...' : 'Start Quiz'}
           </button>
-            </Link>
+         {error && <p className='error-message'>{error}</p>}
         </form>
 
       </section>

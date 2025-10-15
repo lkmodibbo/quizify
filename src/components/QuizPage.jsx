@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './styles/QuizPage.css';
 import Navbar from './Navbar';
 
 function QuizPage({ onQuit }) {
   const location = useLocation();
-  const { selectedSubject, questions } = location.state || {};
+  const navigate = useNavigate();
 
+  const { settings, questions } = location.state || {};
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [timeLeft, setTimeLeft] = useState(300);
+  const [timeLeft, setTimeLeft] = useState(600);
+  const [score, setScore] = useState(0)
+
+  React.useEffect(() => {
+    if (!questions || questions.length === 0) {
+      navigate('/')
+    }
+  }, [settings, questions, navigate])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -24,90 +32,56 @@ function QuizPage({ onQuit }) {
     return `${min}:${sec < 10 ? "0" : ""}${sec}`;
   };
 
-  const safeQuestions = questions && questions.length > 0
-  ? questions
-  : [
-      {
-        question: "What is the capital of Nigeria?",
-        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
-      },
-      {
-        question: "What is the capital of Nigeria?",
-        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
-      },
-      {
-        question: "What is the capital of Nigeria?",
-        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
-      },
-      {
-        question: "What is the capital of Nigeria?",
-        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
-      },
-      {
-        question: "What is the capital of Nigeria?",
-        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
-      },
-      {
-        question: "What is the capital of Nigeria?",
-        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
-      },
 
-      {
-        question: "What is the capital of Nigeria?",
-        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
-      },
-      {
-        question: "What is the capital of Nigeria?",
-        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
-      },
-
-      {
-        question: "What is the capital of Nigeria?",
-        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
-      },
-      {
-        question: "What is the capital of Nigeria?",
-        options: ["Abuja", "Lagos", "Kano", "Ibadan"],
-      }
-    ];
-  const currentQuestion = safeQuestions[currentIndex]
+  const handleSelect = (option) => {
+    setSelectedOption(option)
+  }
 
   const handleNext = () => {
-    if (currentIndex <safeQuestions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-      setSelectedOption(null);
+    const currentQuestion = questions[currentIndex];
+    if (selectedOption === currentQuestion.correct_answer) {
+      setScore((prev) => prev + 1);
+    }
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex((prev) => prev + 1)
+      setSelectedOption(null)
+    } else {
+      navigate('/result', {
+        state: { score, total: questions.length, name: settings.name},
+      });
     }
   };
 
   const handlePrev = () => {
     if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+      setCurrentIndex((prev) => prev - 1);
       setSelectedOption(null);
     }
   };
-
-  const handleSelect = (option) => {
-    setSelectedOption(option);
-  };
-
+  if (!questions || questions.length === 0) {
+    return <p className='loading'>Loading questions...</p>
+  }
+  const currentQuestion = questions[currentIndex]
   return (
     <>
      <Navbar />
     <div className='quiz-container'>
       <div className="quiz-header">
-        <h2>{selectedSubject} Quiz</h2>
+        <h2>{settings?.subject?.toUpperCase()} Quiz</h2>
         <div className="timer">⏱ {formatTime(timeLeft)}</div>
       </div>
 
       <div className="question-section">
-        <h3>Question {currentIndex + 1}/{safeQuestions.length}</h3>
+        <h3>Question {currentIndex + 1}/{questions.length}</h3>
         <p className='question-text'>{currentQuestion.question}</p>
 
         <div className="options">
           {currentQuestion.options.map((option, index) => (
             <button
               key={index}
-              className={`option-btn ${selectedOption === option ? "selected" : ""}`}
+              className={`option-btn ${
+                selectedOption === option ? "selected" : ""
+              }`}
               onClick={() => handleSelect(option)}
             >
               {option}
@@ -117,11 +91,19 @@ function QuizPage({ onQuit }) {
       </div>
 
       <div className="quiz-footer">
-        <button className='nav-btn' onClick={handlePrev} disabled={currentIndex === 0}>
+        <button 
+          className='nav-btn' 
+          onClick={handlePrev} 
+          disabled={currentIndex === 0}
+        >
           Prev
         </button>
-        <button className='nav-btn' onClick={handleNext} disabled={currentIndex === safeQuestions.length - 1}>
-          Next
+        <button 
+          className='nav-btn' 
+          onClick={handleNext} 
+          disabled={!selectedOption}
+          >
+         {currentIndex ===questions.length - 1 ? 'Finish' : 'Next'}
         </button>
       </div>
           <div className='submit-btn'>
