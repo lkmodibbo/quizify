@@ -24,13 +24,26 @@ export default function SetupPage() {
       .required('Number of questions is required'),
   });
   const fetchQuestions = async (values) => {
-    const category = getCategory(values.subject)
-    const url = `${BASE_URL}?amount=${values.numQuestions}&category=${category}&difficulty=${values.difficulty}&type=multiple`;
-    
+  const category = getCategory(values.subject);
+  const url = `${BASE_URL}?amount=${values.numQuestions}&category=${category}&difficulty=${values.difficulty}&type=multiple`;
+
+  try {
     const response = await fetch(url);
-    const data = await response.json()
-    return data.results;
+    if (!response.ok) {
+      throw new Error("Failed to fetch questions from API");
     }
+    const data = await response.json();
+    // Ensure the response structure is correct
+    if (!data.results) {
+      throw new Error("Invalid response format from API");
+    }
+
+    return data.results;
+  } catch (err) {
+    console.error("Error fetching questions:", err);
+    throw err;
+  }
+};
 
   const formik = useFormik({
     initialValues: {

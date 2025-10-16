@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './styles/QuizPage.css';
 import Navbar from './Navbar';
 
-function QuizPage({ onQuit }) {
+function QuizPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -11,7 +11,7 @@ function QuizPage({ onQuit }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [timeLeft, setTimeLeft] = useState(600);
-  const [score, setScore] = useState(0);
+  // const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState([])
 
   React.useEffect(() => {
@@ -33,9 +33,9 @@ function QuizPage({ onQuit }) {
     }
   }, [timeLeft])
 
-  function computerScore(questions, answers) {
+  function computeScore(questions, answers) {
     let score = 0;
-    for (let i = 0; i < questions.length, i++){
+    for (let i = 0; i < questions.length; i++){
       if (!answers[i] ) continue; // unanswerd treat as incorret
       if (answers[i] === questions[i].correct_answer) score++;
     }
@@ -43,7 +43,7 @@ function QuizPage({ onQuit }) {
   }
 
   function finishQuiz() {
-    const score = computerScore(questions, answers);
+    const score = computeScore(questions, answers);
     const total = questions.length;
     const percent = Math.round((score / total) * 100);
     //optionally save to sessionStorage for resilience
@@ -68,20 +68,12 @@ function QuizPage({ onQuit }) {
   //   setSelectedOption(option)
   // }
 
-  const handleNext = () => {
-    const currentQuestion = questions[currentIndex];
-    if (selectedOption === currentQuestion.correct_answer) {
-      setScore((prev) => prev + 1);
-    }
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex((prev) => prev + 1)
-      setSelectedOption(null)
-    } else {
-      navigate('/result', {
-        state: { score, total: questions.length, name: settings.name},
-      });
-    }
-  };
+    const handleNext = () => {
+  if (currentIndex < questions.length - 1) {
+    setCurrentIndex((prev) => prev + 1);
+    setSelectedOption(null);
+  }
+};
 
   const handlePrev = () => {
     if (currentIndex > 0) {
@@ -138,7 +130,7 @@ function QuizPage({ onQuit }) {
         </button>
       </div>
           <div className='submit-btn'>
-            <button className='quit-btn' onClick={onQuit}>Submit Quiz</button>
+            <button className='quit-btn' onClick={finishQuiz}>Submit Quiz</button>
           </div>
     </div>
     </>
