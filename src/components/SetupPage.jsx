@@ -11,9 +11,8 @@ export default function SetupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-console.log("BASE_URL =", BASE_URL);
-
+    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    console.log("BASE_URL =", BASE_URL);
 
   const navigate = useNavigate();
   const validationSchema = Yup.object({
@@ -48,11 +47,12 @@ console.log("BASE_URL =", BASE_URL);
       try {
         const data = await fetchQuestions(values)
 
-        if (data.length === 0) {
+        if (!data || data.length === 0) {
+          //If no question are returned show this error
           throw new Error('No questions found for this selection')
         }
 
-        const formattedQuestions = data.results.map((q) => ({
+        const formattedQuestions = data.map((q) => ({
           question: decodeHTML(q.question),
           options: shuffleArray([
             ...q.incorrect_answers.map(decodeHTML),

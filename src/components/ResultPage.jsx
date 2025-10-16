@@ -1,65 +1,37 @@
-import React, { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; // Make sure you import these hooks!
+import React from 'react';
+import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+import './styles/ResultPage.css';
 
-// Destructure the component name to keep the file name consistent
-export default function ResultsPage() {
-  // 1. HOOKS and State Management
-  // Use destructuring for clearer access to hook return values
-  const { state: data } = useLocation();
+export default function ResultPage() {
+  const location = useLocation();
   const navigate = useNavigate();
 
-  // 2. SIDE EFFECT (useEffect)
-  // This hook ensures that the user is redirected if they land on this page
-  // without any quiz data (e.g., refreshing the page or direct navigation).
-  useEffect(() => {
-    // Check if the location state (data) is empty
-    if (!data) {
-      navigate('/setup');
-    }
-  }, [data, navigate]); // Dependencies are crucial for correct behavior
+  // Get data passed from QuizPage via navigate()
+  const quizData = location.state || JSON.parse(sessionStorage.getItem('lastQuiz'));
 
-  // 3. EARLY EXIT/GUARD CLAUSE
-  // Immediately stop rendering if the data is missing (while waiting for navigation)
-  if (!data) {
-    return null;
-  }
+  // Redirect if no quiz data is found
+  if (!quizData) return <Navigate to="/setup" replace />;
 
-  // 4. RENDER LOGIC
-  // Destructure for cleaner access within the JSX
-  const { score, total, answers } = data;
+  const { settings, score, total, percent } = quizData;
 
   return (
-    <div className="page">
-      <div className="panel">
-        <h2>Quiz Results</h2>
-        
-        {/* Display Score */}
-        <p className="muted">
-          Score: <span className="highlight">{score}</span> / {total}
-        </p>
+    <div className="result-page">
+      <div className="result-card">
+        <h2>Quiz Completed ✅</h2>
 
-        {/* --- Review Section --- */}
-        <h3>Review</h3>
-        <ul>
-          {/*
-            Iterate over the answers object.
-            Object.entries returns an array of [key, value] pairs.
-            Here, [qid, sel] represents [Question ID, Selected Answer Index]
-          */}
-          {Object.entries(answers).map(([qid, selectedIndex]) => (
-            <li key={qid}>
-              Question **{qid}** - Answer Index Picked: **{selectedIndex}**
-            </li>
-          ))}
-        </ul>
+        <div className="result-info">
+          <p><strong>Subject:</strong> {settings?.subject || 'N/A'}</p>
+          <p><strong>Total Questions:</strong> {total}</p>
+          <p><strong>Your Score:</strong> {score}</p>
+          <p><strong>Percentage:</strong> {percent}%</p>
+        </div>
 
-        {/* --- Controls Section --- */}
-        <div className="controls">
-          <button 
-            onClick={() => navigate('/setup')} 
-            className="primary"
+        <div className="result-actions">
+          <button
+            className="try-again-btn"
+            onClick={() => navigate('/setup')}
           >
-            Back to Setup
+            Try Again
           </button>
         </div>
       </div>

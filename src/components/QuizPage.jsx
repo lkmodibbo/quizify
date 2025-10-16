@@ -11,7 +11,8 @@ function QuizPage({ onQuit }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [timeLeft, setTimeLeft] = useState(600);
-  const [score, setScore] = useState(0)
+  const [score, setScore] = useState(0);
+  const [answers, setAnswers] = useState([])
 
   React.useEffect(() => {
     if (!questions || questions.length === 0) {
@@ -26,16 +27,46 @@ function QuizPage({ onQuit }) {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    if (timeLeft === 0) {
+      finishQuiz()
+    }
+  }, [timeLeft])
+
+  function computerScore(questions, answers) {
+    let score = 0;
+    for (let i = 0; i < questions.length, i++){
+      if (!answers[i] ) continue; // unanswerd treat as incorret
+      if (answers[i] === questions[i].correct_answer) score++;
+    }
+    return score;
+  }
+
+  function finishQuiz() {
+    const score = computerScore(questions, answers);
+    const total = questions.length;
+    const percent = Math.round((score / total) * 100);
+    //optionally save to sessionStorage for resilience
+    sessionStorage.setItem('lastQuiz', JSON.stringify({ settings, score, total, percent}))
+    navigate('/result', { state: { settings, score, total, percent}})
+  }
   const formatTime = (seconds) => {
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
     return `${min}:${sec < 10 ? "0" : ""}${sec}`;
   };
 
-
-  const handleSelect = (option) => {
+  function handleSelect(option) {
+    setAnswers(prev => {
+      const copy = [...prev];
+      copy[currentIndex] = option;
+      return copy;
+    })
     setSelectedOption(option)
   }
+  // const handleSelect = (option) => {
+  //   setSelectedOption(option)
+  // }
 
   const handleNext = () => {
     const currentQuestion = questions[currentIndex];

@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SetupPage from './components/SetupPage';
 import QuizPage from './components/QuizPage';
 import Layout from './components/Layout';
+import ResultPage from './components/ResultPage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<QuizHome />} /> 
         <Route path='/setup' element={<SetupPage />} />
         <Route path='/quiz-page' element={<QuizPage />} />
+        <Route path='/result' element={<ResultPage /> } />
       </Routes>
     </Router>
   );
