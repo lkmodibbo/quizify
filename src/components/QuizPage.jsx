@@ -33,23 +33,48 @@ function QuizPage() {
     }
   }, [timeLeft])
 
-  function computeScore(questions, answers) {
-    let score = 0;
-    for (let i = 0; i < questions.length; i++){
-      if (!answers[i] ) continue; // unanswerd treat as incorret
-      if (answers[i] === questions[i].correct_answer) score++;
-    }
-    return score;
+  // function computeScore(questions, answers) {
+  //   let score = 0;
+  //   for (let i = 0; i < questions.length; i++){
+  //     if (!answers[i] ) continue; // unanswerd treat as incorret
+  //     if (answers[i] === questions[i].correct_answer) score++;
+  //   }
+  //   return score;
+  // }
+
+  // function finishQuiz() {
+  //   const score = computeScore(questions, answers);
+  //   const total = questions.length;
+  //   const percent = Math.round((score / total) * 100);
+  //   //optionally save to sessionStorage for resilience
+  //   sessionStorage.setItem('lastQuiz', JSON.stringify({ settings, score, total, percent}))
+  //   navigate('/result', { 
+  //     state: { 
+  //       settings, 
+  //       score, 
+  //       total, 
+  //       percent
+  //     }
+  //   })
+  // }
+  function finishQuiz() {
+    const total = questions.length;
+    const correctCount = answers.filter(
+      (answer, index) => answer === questions[index].correct_answer
+    ).length
+    const wrongCount = total - correctCount;
+    const percent = Math.round((correctCount / total) * 100);
+
+    sessionStorage.setItem(
+      "lastQuiz",
+      JSON.stringify({ settings, total, correct: correctCount, wrong: wrongCount, percent })
+
+    );
+    navigate("/result", {
+      state: { settings, total, correct: correctCount, wrong:wrongCount, percent}
+    })
   }
 
-  function finishQuiz() {
-    const score = computeScore(questions, answers);
-    const total = questions.length;
-    const percent = Math.round((score / total) * 100);
-    //optionally save to sessionStorage for resilience
-    sessionStorage.setItem('lastQuiz', JSON.stringify({ settings, score, total, percent}))
-    navigate('/result', { state: { settings, score, total, percent}})
-  }
   const formatTime = (seconds) => {
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
