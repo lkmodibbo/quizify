@@ -23,19 +23,47 @@ export default function SetupPage() {
       .max(20, `Max questions is 20`)
       .required('Number of questions is required'),
   });
-  const fetchQuestions = async (values) => {
+//   const fetchQuestions = async (values) => {
+//   const category = getCategory(values.subject);
+//   const url = `${BASE_URL}?amount=${values.numQuestions}&category=${category}&difficulty=${values.difficulty}&type=multiple`;
+
+//   try {
+//     const response = await fetch(url);
+//     const data = await response.json();
+
+//     if (!response.ok) {
+//       throw new Error("Failed to fetch questions from API");
+//     }
+//     // Ensure the response structure is correct
+//     if (!data.results) {
+//       throw new Error("Invalid response format from API");
+//     }
+
+//     return data.results;
+//   } catch (err) {
+//     console.error("Error fetching questions:", err);
+//     throw err;
+//   }
+// };
+const fetchQuestions = async (values) => {
   const category = getCategory(values.subject);
   const url = `${BASE_URL}?amount=${values.numQuestions}&category=${category}&difficulty=${values.difficulty}&type=multiple`;
 
   try {
     const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error("Failed to fetch questions from API");
-    }
     const data = await response.json();
-    // Ensure the response structure is correct
-    if (!data.results) {
-      throw new Error("Invalid response format from API");
+
+    // If no questions found, try again with no difficulty filter
+    if (data.response_code === 1 || !data.results.length) {
+      const fallbackUrl = `${BASE_URL}?amount=${values.numQuestions}&category=${category}&type=multiple`;
+      const fallbackResponse = await fetch(fallbackUrl);
+      const fallbackData = await fallbackResponse.json();
+
+      if (!fallbackData.results.length) {
+        throw new Error("No questions found for this selection");
+      }
+
+      return fallbackData.results;
     }
 
     return data.results;
@@ -60,11 +88,9 @@ export default function SetupPage() {
       try {
         const data = await fetchQuestions(values)
 
-        if (!data || data.length === 0) {
-          //If no question are returned show this error
-          throw new Error('No questions found for this selection')
-        }
-
+       if (!Array.isArray(data) || data.length === 0) {
+  throw new Error('No questions found for this selection')
+}
         const formattedQuestions = data.map((q) => ({
           question: decodeHTML(q.question),
           options: shuffleArray([
