@@ -5,8 +5,8 @@ function Navbar() {
   return (
     <div className='navbar-container'>
       <div className="logo">
-        <div className="mark">?</div>
-        <h1 className="header">QuizMaster</h1>
+        <div className="nav-mark">?</div>
+        <h1 className="nav-header">QuizMaster</h1>
       </div>
     
       <ul className="nav-ui">

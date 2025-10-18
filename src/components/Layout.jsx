@@ -1,16 +1,17 @@
+// Layout.jsx
 import React from "react";
 import Navbar from "./Navbar";
 import { Outlet, useLocation } from "react-router-dom";
 
 function Layout() {
   const location = useLocation();
-  const hideNavbar = location.pathname === "/login" || location.pathname === "/signup";
+  const showNavbarOn = ["/setup", "/quiz-page", "/result"];
+  const showNavbar = showNavbarOn.includes(location.pathname);
 
   return (
     <>
-    {!hideNavbar && <Navbar />}
+      {showNavbar && <Navbar />}
       <div className="content">
-        <Navbar />
         <Outlet />
       </div>
     </>

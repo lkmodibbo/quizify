@@ -132,7 +132,7 @@ const fetchQuestions = async (values) => {
   return (
     <div className="setup-page">
       <section className="setup-card">
-        <Link to="/">Back to Login</Link>
+        <Link className='back-to-login' to="/">Back to Login</Link>
         <h2 className='title'>Welcome, {user?.username ? user.username : "Guest"}</h2>
         <div className="back-to-login">
           <p className='switch-text'>

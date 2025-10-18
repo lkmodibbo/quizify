@@ -128,9 +128,6 @@ const SignUp = ({ onSwitchToLogin }) => {
           <p className='error-text'>{formik.errors.confirmPassword}</p>
         )}
       </div>
-        {/* <Link to="/setup" className='sign-up-link'>
-            <button type='submit' className='signin-btn'>Sign Up</button>
-        </Link> */}
         <button type='submit' className='signin-btn'>Sign Up</button>
       <p className='switch-text'>
         Already have an account?{" "}

@@ -134,3 +134,9 @@ select:focus {
   color: #0056b3;
   text-decoration: underline;
 }
+.back-to-login{
+  text-decoration: none;
+}
+.back-to-login:hover {
+  color: #007bff;
+}
