@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import  Login  from '../components/Login'
 import SignUp from '../components/SignUp'
 import '../components/styles/QuizHome.css'
+import Navbar from '../components/Navbar'
 
 const QuizHome = () => {
     const [showLogin, setShowLogin] = useState(true)
   return (
     <div className='home-container'>
+      <Navbar />
         <div className="logo">
             <div className="mark">?</div>
         </div>

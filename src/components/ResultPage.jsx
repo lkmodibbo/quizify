@@ -44,10 +44,10 @@ export default function ResultPage() {
         </div>
 
         <div className="actions">
-          <button className="btn" onClick={() => navigate("/setup")}>
+          <button className="retake-btn" onClick={() => navigate("/setup")}>
             Retake the quiz
           </button>
-          <button className="btn" onClick={() => navigate("/history")}>
+          <button className="history-btn" onClick={() => navigate("/history")}>
             History
           </button>
         </div>

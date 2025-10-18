@@ -8,7 +8,7 @@ function Navbar() {
         <div className="mark">?</div>
         <h1 className="header">QuizMaster</h1>
       </div>
-      
+    
       <ul className="nav-ui">
         <li><a href="#">Home</a></li>
         <li><a href="#">About</a></li>

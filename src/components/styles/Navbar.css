@@ -1,53 +1,74 @@
 .navbar-container {
-  width: 80%;
+  max-width: 1100px; /* limits the width */
+  margin: 10px auto; /* centers it */
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   align-items: center;
-  text-align: center;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(90deg, #2563eb, #4f46e5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   color: #fff;
+  border-radius: 12px;
 }
 
-.logo{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* space between the mark and the text */
 }
+
 .mark {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #2563EB;
-    color: #fff;
-    font-size: 32px;
-    font-weight: bold;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #2563eb;
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.header{
-    font-size: 1.8rem;
-    margin-top: 0;
-    font-weight: bold;
-    margin-bottom: -10px;
-    color: black;
+
+.header {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0; /* removes any extra top/bottom spacing */
 }
+
 .nav-ui {
   list-style: none;
   display: flex;
-  gap: 20px; 
+  gap: 1.2rem;
   margin: 0;
   padding: 0;
 }
 
-.nav-ui li {
-  font-size: 16px;
+.nav-ui a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
-.nav-ui a {
-  color: black;
-  text-decoration: none;
-  font-weight: lighter;
-  font-size: 18px;
-  transition: color 0.3s ease;
+.nav-ui a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background: #fff;
+  left: 0;
+  bottom: -4px;
+  transition: width 0.3s ease;
+}
+
+.nav-ui a:hover::after {
+  width: 100%;
 }
 
 .nav-ui a:hover {
-  opacity: 0.7;
+  opacity: 0.9;
 }

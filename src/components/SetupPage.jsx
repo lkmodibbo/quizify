@@ -126,19 +126,19 @@ const fetchQuestions = async (values) => {
     textarea.innerHTML = text;
     return textarea.value;
   }
+  const user = JSON.parse(localStorage.getItem("user"))
 
   const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
   return (
     <div className="setup-page">
-      <Navbar />
       <section className="setup-card">
+        <Link to="/">Back to Login</Link>
+        <h2 className='title'>Welcome, {user?.username ? user.username : "Guest"}</h2>
         <div className="back-to-login">
           <p className='switch-text'>
-          <Link to="/">Back to Login</Link>
         </p>
+         <p className="muted">Fill the form below to start your quiz.</p>
         </div>
-        <h2 className="title">Welcome, {formik.values.name || 'Student'} 👋</h2>
-        <p className="muted">Fill the form below to start your quiz.</p>
 
         <form onSubmit={formik.handleSubmit} className="setup-form">
 

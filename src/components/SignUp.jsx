@@ -2,15 +2,18 @@ import React from 'react';
 import '../components/styles/SignUp.css';
 import * as Yup from "yup"
 import { useFormik } from 'formik';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SignUpSchema = Yup.object({
-  username: Yup.string()
+  fullName: Yup.string()
     .min(3, "Name must be at least 3 characters")
     .required("Full name is required"),
   email: Yup.string()
     .email("Invalid email address")
     .required("email is required"),
+  username: Yup.string()
+  .min(3, "username must be at least 3 characters")
+    .required("Enter Your username"),
   password: Yup.string()
     .min(8, "Password must be at least 8 characters")
     .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
@@ -22,8 +25,11 @@ const SignUpSchema = Yup.object({
   });
 
 const SignUp = ({ onSwitchToLogin }) => {
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
+      fullName: "",
       username: "",
       email: "",
       password: "",
@@ -32,8 +38,13 @@ const SignUp = ({ onSwitchToLogin }) => {
     validationSchema: SignUpSchema,
     onSubmit: (values, { resetForm }) => {
       console.log("SignUp submitted:", values);
+
+      localStorage.setItem("user", JSON.stringify(values))
+
       alert("Sign-up successful")
       resetForm();
+
+      navigate("/")
     }
   })
 
@@ -43,16 +54,16 @@ const SignUp = ({ onSwitchToLogin }) => {
       <div>
         <input 
           type="text"
-          id="fullname"
-          name="username"
+          id="fullName"
+          name="fullName"
           placeholder="Enter Your Full Name"
-          value={formik.values.username}
+          value={formik.values.fullName}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           required
         />
-        {formik.touched.username && formik.errors.username && (
-          <p className='error-text'>{formik.errors.username}</p>
+        {formik.touched.fullName && formik.errors.fullName && (
+          <p className='error-text'>{formik.errors.fullName}</p>
         )}
       </div>
 
@@ -71,7 +82,21 @@ const SignUp = ({ onSwitchToLogin }) => {
           <p className='error-text'>{formik.errors.email}</p>
         )}
       </div>
-
+        <div className='username'>
+        <input 
+          type='text' 
+          id='username'
+          name='username'
+          placeholder="username"
+          value={formik.values.username}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          required
+          />
+          {formik.touched.username && formik.errors.username && (
+            <p className='error-text'>{formik.errors.username}</p>
+          )}
+        </div>
       <div>
         <input 
           type="password"
@@ -103,9 +128,10 @@ const SignUp = ({ onSwitchToLogin }) => {
           <p className='error-text'>{formik.errors.confirmPassword}</p>
         )}
       </div>
-        <Link to="/setup" className='sign-up-link'>
+        {/* <Link to="/setup" className='sign-up-link'>
             <button type='submit' className='signin-btn'>Sign Up</button>
-        </Link>
+        </Link> */}
+        <button type='submit' className='signin-btn'>Sign Up</button>
       <p className='switch-text'>
         Already have an account?{" "}
         <span onClick={onSwitchToLogin}>Login here</span>
