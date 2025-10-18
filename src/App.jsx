@@ -5,8 +5,7 @@ import QuizHome from './components/QuizHome';
 import SetupPage from './components/SetupPage';
 import QuizPage from './components/QuizPage';
 import ResultPage from './components/ResultPage';
-import Login from './components/Login';
-import Signup from './components/SignUp';
+
 
 function App() {
   return (
@@ -18,9 +17,6 @@ function App() {
           <Route path="/quiz-page" element={<QuizPage />} />
           <Route path="/result" element={<ResultPage />} />
         </Route>
-
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
       </Routes>
     </Router>
   );

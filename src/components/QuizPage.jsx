@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './styles/QuizPage.css';
-import Navbar from './Navbar';
 
 function QuizPage() {
   const location = useLocation();
@@ -11,8 +10,9 @@ function QuizPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [timeLeft, setTimeLeft] = useState(600);
-  // const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState([])
+  const [showConfirm, setShowConfirm] = useState(false);
+
 
   React.useEffect(() => {
     if (!questions || questions.length === 0) {
@@ -33,30 +33,6 @@ function QuizPage() {
     }
   }, [timeLeft])
 
-  // function computeScore(questions, answers) {
-  //   let score = 0;
-  //   for (let i = 0; i < questions.length; i++){
-  //     if (!answers[i] ) continue; // unanswerd treat as incorret
-  //     if (answers[i] === questions[i].correct_answer) score++;
-  //   }
-  //   return score;
-  // }
-
-  // function finishQuiz() {
-  //   const score = computeScore(questions, answers);
-  //   const total = questions.length;
-  //   const percent = Math.round((score / total) * 100);
-  //   //optionally save to sessionStorage for resilience
-  //   sessionStorage.setItem('lastQuiz', JSON.stringify({ settings, score, total, percent}))
-  //   navigate('/result', { 
-  //     state: { 
-  //       settings, 
-  //       score, 
-  //       total, 
-  //       percent
-  //     }
-  //   })
-  // }
   function finishQuiz() {
     const total = questions.length;
     const correctCount = answers.filter(
@@ -89,10 +65,7 @@ function QuizPage() {
     })
     setSelectedOption(option)
   }
-  // const handleSelect = (option) => {
-  //   setSelectedOption(option)
-  // }
-
+ 
     const handleNext = () => {
   if (currentIndex < questions.length - 1) {
     setCurrentIndex((prev) => prev + 1);
@@ -112,10 +85,9 @@ function QuizPage() {
   const currentQuestion = questions[currentIndex]
   return (
     <>
-     <Navbar />
     <div className='quiz-container'>
       <div className="quiz-header">
-        <h2>{settings?.subject?.toUpperCase()} Quiz</h2>
+        <h2>{settings?.subject?.toLowerCase()} Quiz</h2>
         <div className="timer">⏱ {formatTime(timeLeft)}</div>
       </div>
 
@@ -155,9 +127,20 @@ function QuizPage() {
         </button>
       </div>
           <div className='submit-btn'>
-            <button className='quit-btn' onClick={finishQuiz}>Submit Quiz</button>
+            <button className='quit-btn' onClick={() => setShowConfirm(true)}>Submit Quiz</button>
           </div>
     </div>
+    {showConfirm && (
+      <div className='confirm-overlay'>
+        <div className='confirm-card'>
+          <h3>Are you sure you want to submit your quiz</h3>
+          <div className='confirm-actions'>
+            <button className='yes-btn' onClick={(finishQuiz)}>Yes, Submit</button>
+            <button className='no-btn' onClick={() => setShowConfirm(false)}>No, Go Back</button>
+          </div>
+        </div>
+      </div>
+    )}
     </>
   );
 }
