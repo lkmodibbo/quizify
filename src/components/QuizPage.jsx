@@ -41,14 +41,23 @@ function QuizPage() {
     const wrongCount = total - correctCount;
     const percent = Math.round((correctCount / total) * 100);
 
-    sessionStorage.setItem(
-      "lastQuiz",
-      JSON.stringify({ settings, total, correct: correctCount, wrong: wrongCount, percent })
+  const quizResult = {
+    username: settings?.username || "Guest",
+    subject: settings?.subject || "General",
+    total,
+    correct: correctCount,
+    wrong: wrongCount,
+    percent,
+    date: new Date().toLocaleString()
+  };
 
-    );
-    navigate("/result", {
-      state: { settings, total, correct: correctCount, wrong:wrongCount, percent}
-    })
+   sessionStorage.setItem("lastQuiz", JSON.stringify(quizResult));
+
+   const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+   history.push(quizResult)
+   localStorage.setItem("quizHistory", JSON.stringify(history))
+
+    navigate("/result", { state: quizResult })
   }
 
   const formatTime = (seconds) => {

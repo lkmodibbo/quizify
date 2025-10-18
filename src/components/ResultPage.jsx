@@ -9,7 +9,30 @@ export default function ResultPage() {
 
   if (!quizData) return <Navigate to="/setup" replace />;
 
-  const { total, percent, correct, wrong } = quizData;
+const { total, percent, correct, wrong, settings } = quizData;
+const subject = settings?.subject || "Unknown";
+
+  const username = localStorage.getItem("username") || "guest";
+
+  const quizResult = {
+    username,
+    subject,
+    total,
+    correct,
+    wrong,
+    percent,
+    date: new Date().toLocaleString(),
+  };
+
+  const existingHistory = JSON.parse(localStorage.getItem("quizHistory")) || [];
+  existingHistory.push(quizResult)
+  localStorage.setItem("quizHistory", JSON.stringify(existingHistory))
+
+  if (!sessionStorage.getItem("quizSaved")) {
+  existingHistory.push(quizResult);
+  localStorage.setItem("quizHistory", JSON.stringify(existingHistory));
+  sessionStorage.setItem("quizSaved", "true");
+}
 
   return (
     <div className="result-container">

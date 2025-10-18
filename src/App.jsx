@@ -5,6 +5,7 @@ import QuizHome from './components/QuizHome';
 import SetupPage from './components/SetupPage';
 import QuizPage from './components/QuizPage';
 import ResultPage from './components/ResultPage';
+import HistoryPage from './components/HistoryPage';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/setup" element={<SetupPage />} />
           <Route path="/quiz-page" element={<QuizPage />} />
           <Route path="/result" element={<ResultPage />} />
+          <Route path="/history" element={<HistoryPage />} />
         </Route>
       </Routes>
     </Router>

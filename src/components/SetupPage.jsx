@@ -171,7 +171,8 @@ const fetchQuestions = async (values) => {
               onBlur={formik.handleBlur}
             >
               <option value="" disabled>Choose difficulty</option>
-              <option value="easy">Easy</option>
+              <option value="easy">Choose Difficulty</option>
+               <option value="easy">Easy</option>
               <option value="medium">Medium</option>
               <option value="hard">Hard</option>
             </select>

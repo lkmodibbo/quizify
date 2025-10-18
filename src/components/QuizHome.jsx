@@ -22,7 +22,7 @@ const QuizHome = () => {
 
         <div className="btns">
           <div className="switch-btns">
-            <button
+            {/* <button
               className={`switch-btn ${showLogin ? 'active' : ''}`}
               onClick={() => setShowLogin(true)}
             >
@@ -33,7 +33,7 @@ const QuizHome = () => {
               onClick={() => setShowLogin(false)}
             >
               Sign Up
-            </button>
+            </button> */}
           </div>
 
           <div className="form-container">

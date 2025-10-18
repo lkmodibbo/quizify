@@ -1,0 +1,93 @@
+.history-container {
+  padding: 2rem;
+  background: #f9fafb;
+  min-height: 100vh;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  margin: auto;
+}
+
+.clear-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.clear-btn:hover {
+  background: #dc2626;
+}
+
+.history-table {
+  width: 90%;
+  margin: 2rem auto;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.history-table th,
+.history-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.history-table th {
+  background: #1e3a8a;
+  color: white;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.history-table tr:hover {
+  background: #f1f5f9;
+}
+
+.high {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+.medium {
+  color: #facc15;
+  font-weight: bold;
+}
+
+.low {
+  color: #dc2626;
+  font-weight: bold;
+}
+
+.score-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.progress-bar {
+  width: 100px;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 8px;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
