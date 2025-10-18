@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from "yup";
 import '../components/styles/Login.css'
@@ -15,6 +15,8 @@ const LoginSchema = Yup.object({
 });
 
 const Login = ({ onSwitchToSignup }) => {
+  const [error, setError] = useState("")
+
  const formik = useFormik({
     initialValues: {
       email: "",
@@ -22,8 +24,26 @@ const Login = ({ onSwitchToSignup }) => {
     },
     validationSchema: LoginSchema,
     onSubmit: (values, { resetForm }) => {
+      localStorage.setItem("username", values.email)
+      const storedUser = JSON.parse(localStorage.getItem("user"))
+      if (!storedUser) {
+        setError("No User Found. Please sign up first")
+        return;
+      }
+
+      if (
+        values.username === storedUser.username && 
+        values.password === storedUser.password
+      ) {
+        localStorage.setItem("username", formik.values.username);
+        window.location.href = "/setup"
+        resetForm()
+      } else {
+        setError("Invalid username or password")
+      }
       console.log("Login Submitted:", values) 
-      resetForm()
+
+      localStorage.setItem("username", values.email)
     }
  })
 
@@ -31,10 +51,11 @@ const Login = ({ onSwitchToSignup }) => {
     e.preventDefault();
     alert("Password recovery feature will be added soon!");
   };
-  
 
   return (
     <form className="login-form" onSubmit={formik.handleSubmit}>
+      {error && <p className='error-text'>{error}</p>}
+      
       <div>
         <input
           type="email"

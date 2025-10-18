@@ -2,7 +2,7 @@ import React from 'react';
 import '../components/styles/SignUp.css';
 import * as Yup from "yup"
 import { useFormik } from 'formik';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpSchema = Yup.object({
   fullName: Yup.string()
@@ -39,7 +39,14 @@ const SignUp = ({ onSwitchToLogin }) => {
     onSubmit: (values, { resetForm }) => {
       console.log("SignUp submitted:", values);
 
-      localStorage.setItem("user", JSON.stringify(values))
+      const userData = {
+        username: values.username,
+        password: values.password,
+        fullName: values.fullName,
+        email: values.email
+      };
+
+      localStorage.setItem("user", JSON.stringify(userData))
 
       alert("Sign-up successful")
       resetForm();
@@ -50,7 +57,6 @@ const SignUp = ({ onSwitchToLogin }) => {
 
   return (
     <form className='signup-form' onSubmit={formik.handleSubmit}>
-      {/* {error && <p className='error-text'>{error}</p>} */}
       <div>
         <input 
           type="text"

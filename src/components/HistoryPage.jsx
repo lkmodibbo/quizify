@@ -3,6 +3,7 @@ import "./styles/HistoryPage.css";
 
 const HistoryPage = () => {
   const [history, setHistory] = useState([]);
+  const [selectedRecord, setSelectedRecord] = useState(null); // for modal
 
   // Load quiz history from localStorage
   useEffect(() => {
@@ -10,7 +11,16 @@ const HistoryPage = () => {
     setHistory(savedHistory);
   }, []);
 
-  // Clear all quiz history
+  // Delete a single record
+  const handleDelete = (index) => {
+    if (window.confirm("Are you sure you want to delete this record?")) {
+      const updatedHistory = history.filter((_, i) => i !== index);
+      setHistory(updatedHistory);
+      localStorage.setItem("quizHistory", JSON.stringify(updatedHistory));
+    }
+  };
+
+  // Clear all history
   const handleClearHistory = () => {
     if (window.confirm("Are you sure you want to clear all quiz history?")) {
       localStorage.removeItem("quizHistory");
@@ -45,6 +55,7 @@ const HistoryPage = () => {
             <th>Questions</th>
             <th>Score (%)</th>
             <th>Date</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -57,36 +68,60 @@ const HistoryPage = () => {
                 : "low";
 
             return (
-              <tr key={index}>
+              <tr key={index} onClick={() => setSelectedRecord(record)}>
                 <td>{index + 1}</td>
                 <td>{record.username}</td>
                 <td>{record.subject}</td>
                 <td>{record.total}</td>
-                <td className={scoreClass}>
-                  <div className="score-container">
-                    <span>{record.percent}%</span>
-                    <div className="progress-bar">
-                      <div
-                        className="progress"
-                        style={{
-                          width: `${record.percent}%`,
-                          background:
-                            record.percent >= 80
-                              ? "#16a34a"
-                              : record.percent >= 50
-                              ? "#facc15"
-                              : "#dc2626",
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-                </td>
+                <td className={scoreClass}>{record.percent}%</td>
                 <td>{record.date}</td>
+                <td>
+                  <button
+                    className="delete-btn"
+                    onClick={(e) => {
+                      e.stopPropagation(); // prevent modal open
+                      handleDelete(index);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             );
           })}
         </tbody>
       </table>
+
+      {/* Modal */}
+      {selectedRecord && (
+        <div className="modal-overlay" onClick={() => setSelectedRecord(null)}>
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2>Quiz Details</h2>
+            <p>
+              <strong>Username:</strong> {selectedRecord.username}
+            </p>
+            <p>
+              <strong>Email:</strong> {selectedRecord.email || "N/A"}
+            </p>
+            <p>
+              <strong>Subject:</strong> {selectedRecord.subject}
+            </p>
+            <p>
+              <strong>Questions Attempted:</strong> {selectedRecord.total}
+            </p>
+            <p>
+              <strong>Score:</strong> {selectedRecord.percent}%
+            </p>
+            <p>
+              <strong>Date:</strong> {selectedRecord.date}
+            </p>
+            <button onClick={() => setSelectedRecord(null)}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
