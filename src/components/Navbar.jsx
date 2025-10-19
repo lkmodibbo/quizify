@@ -18,8 +18,8 @@ function Navbar() {
 
       <ul className="nav-ui">
         <li><a href="/setup">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="about">About</a></li>
+        <li><a href="contact">Contact</a></li>
       </ul>
     </div>
   );

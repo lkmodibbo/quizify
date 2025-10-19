@@ -6,6 +6,8 @@ import SetupPage from './components/SetupPage';
 import QuizPage from './components/QuizPage';
 import ResultPage from './components/ResultPage';
 import HistoryPage from './components/HistoryPage';
+import Contact from './components/Contact';
+import About from './components/About';
 
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
           <Route path="/quiz-page" element={<QuizPage />} />
           <Route path="/result" element={<ResultPage />} />
           <Route path="/history" element={<HistoryPage />} />
+          <Route path='/contact' element={<Contact />} />
+          <Route path='about' element={<About />} />
         </Route>
       </Routes>
     </Router>
