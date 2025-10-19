@@ -12,6 +12,7 @@ function QuizPage() {
   const [timeLeft, setTimeLeft] = useState(600);
   const [answers, setAnswers] = useState([])
   const [showConfirm, setShowConfirm] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
 
 
   React.useEffect(() => {
@@ -34,6 +35,9 @@ function QuizPage() {
   }, [timeLeft])
 
   function finishQuiz() {
+    if (hasSaved) return;
+    setHasSaved(true)
+
     const total = questions.length;
     const correctCount = answers.filter(
       (answer, index) => answer === questions[index].correct_answer
@@ -55,8 +59,18 @@ function QuizPage() {
 
    const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
    history.push(quizResult)
-   localStorage.setItem("quizHistory", JSON.stringify(history))
+   const lastRecord = history[history.length - 1];
 
+   if (
+    !lastRecord || 
+      lastRecord.username !== quizResult.username || lastRecord.date !== quizResult.date
+   ) {
+    history.push(quizResult);
+    localStorage.setItem("quizHistory", JSON.stringify(history))
+    console.log("Qui history saved:", quizResult);
+   } else {
+    console.log("Duplicate quiz detected-skipped saving")
+   }
     navigate("/result", { state: quizResult })
   }
 
@@ -144,7 +158,7 @@ function QuizPage() {
         <div className='confirm-card'>
           <h3>Are you sure you want to submit your quiz</h3>
           <div className='confirm-actions'>
-            <button className='yes-btn' onClick={(finishQuiz)}>Yes, Submit</button>
+            <button className='yes-btn' onClick={finishQuiz}>Yes, Submit</button>
             <button className='no-btn' onClick={() => setShowConfirm(false)}>No, Go Back</button>
           </div>
         </div>

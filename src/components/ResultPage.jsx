@@ -13,9 +13,11 @@ const { total, percent, correct, wrong, settings } = quizData;
 const subject = settings?.subject || "Unknown";
 
   const username = localStorage.getItem("username") || "guest";
-
+  const email = localStorage.getItem("email") || "N/A";
+  
   const quizResult = {
     username,
+    email,
     subject,
     total,
     correct,
