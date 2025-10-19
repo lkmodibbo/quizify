@@ -5,7 +5,6 @@ import * as Yup from 'yup';
 import Navbar from './Navbar';
 import './styles/SetupPage.css'; 
 
-
 export default function SetupPage() {
 
   const [loading, setLoading] = useState(false);
@@ -23,7 +22,7 @@ export default function SetupPage() {
       .max(20, `Max questions is 20`)
       .required('Number of questions is required'),
   });
-//   const fetchQuestions = async (values) => {
+
 //   const category = getCategory(values.subject);
 //   const url = `${BASE_URL}?amount=${values.numQuestions}&category=${category}&difficulty=${values.difficulty}&type=multiple`;
 
@@ -62,7 +61,6 @@ const fetchQuestions = async (values) => {
       if (!fallbackData.results.length) {
         throw new Error("No questions found for this selection");
       }
-
       return fallbackData.results;
     }
 

@@ -9,10 +9,15 @@ function QuizPage() {
   const { settings, questions } = location.state || {};
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [timeLeft, setTimeLeft] = useState(600);
   const [answers, setAnswers] = useState([])
   const [showConfirm, setShowConfirm] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
+
+  const [timeLeft, setTimeLeft] = useState(() => {
+    const minutesPerQuestion = 1;
+    const totalMinutes = (questions?.length || 10) * minutesPerQuestion;
+    return totalMinutes * 60;
+  })
 
 
   React.useEffect(() => {
@@ -32,47 +37,72 @@ function QuizPage() {
     if (timeLeft === 0) {
       finishQuiz()
     }
-  }, [timeLeft])
+  }, [timeLeft]);
 
-  function finishQuiz() {
-    if (hasSaved) return;
-    setHasSaved(true)
+    useEffect(() => {
+      if (questions && questions.length > 0) {
+        const minutesPerQuestion = 1;
+        const totalMinutes = questions.length * minutesPerQuestion;
+        setTimeLeft(totalMinutes * 60);
+      }
+    }, [questions]);
 
-    const total = questions.length;
-    const correctCount = answers.filter(
-      (answer, index) => answer === questions[index].correct_answer
-    ).length
-    const wrongCount = total - correctCount;
-    const percent = Math.round((correctCount / total) * 100);
+      function finishQuiz() {
+        if (hasSaved) return;
+        setHasSaved(true);
 
-  const quizResult = {
-    username: settings?.username || "Guest",
-    subject: settings?.subject || "General",
-    total,
-    correct: correctCount,
-    wrong: wrongCount,
-    percent,
-    date: new Date().toLocaleString()
-  };
+      const total = questions.length;
+      const correctCount = answers.filter(
+        (answer, index) => answer === questions[index].correct_answer
+      ).length;
+      const wrongCount = total - correctCount;
+      const percent = Math.round((correctCount / total) * 100);
 
-   sessionStorage.setItem("lastQuiz", JSON.stringify(quizResult));
+      //  Get username from localStorage (fallback to Guest)
+      const storedUsername =
+             (localStorage.getItem("username") || settings?.username || "guest").toLowerCase();
+      
+              // const storedUsername = storedUsernameRaw.trim().toLowerCase();
+      storedUsername.charAt(0).toUpperCase() + storedUsername.slice(1)
 
-   const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
-   history.push(quizResult)
-   const lastRecord = history[history.length - 1];
 
-   if (
-    !lastRecord || 
-      lastRecord.username !== quizResult.username || lastRecord.date !== quizResult.date
-   ) {
-    history.push(quizResult);
-    localStorage.setItem("quizHistory", JSON.stringify(history))
-    console.log("Qui history saved:", quizResult);
-   } else {
-    console.log("Duplicate quiz detected-skipped saving")
-   }
-    navigate("/result", { state: quizResult })
-  }
+      // const storedUsername = localStorage.getItem("username") || settings?.username || "Guest";
+
+      //  Get subject safely
+      const subject = settings?.subject || "General";
+
+      const quizResult = {
+        username: storedUsername,
+        subject,
+        total,
+        correct: correctCount,
+        wrong: wrongCount,
+        percent,
+        date: new Date().toLocaleString(),
+      };
+
+      // Save latest result in session
+      sessionStorage.setItem("lastQuiz", JSON.stringify(quizResult));
+
+      //  Load existing history
+      const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+
+      //  Check for duplicates *before* pushing
+      const lastRecord = history[history.length - 1];
+      if (
+        !lastRecord ||
+        lastRecord.username !== quizResult.username ||
+        lastRecord.date !== quizResult.date
+      ) {
+        history.push(quizResult);
+        localStorage.setItem("quizHistory", JSON.stringify(history));
+        console.log("Quiz history saved:", quizResult);
+      } else {
+        console.log("Duplicate quiz detected — skipped saving");
+      }
+
+      navigate("/result", { state: quizResult });
+    }
 
   const formatTime = (seconds) => {
     const min = Math.floor(seconds / 60);
@@ -110,8 +140,10 @@ function QuizPage() {
     <>
     <div className='quiz-container'>
       <div className="quiz-header">
-        <h2>{settings?.subject?.toLowerCase()} Quiz</h2>
-        <div className="timer">⏱ {formatTime(timeLeft)}</div>
+        <h2>{settings?.subject?.toLowerCase()} quiz</h2>
+        <div className="timer">⏱ 
+          {formatTime(timeLeft)} / {questions.length}:00
+        </div>
       </div>
 
       <div className="question-section">
