@@ -5,7 +5,7 @@
   margin: 40px auto;
   padding: 30px;
   border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   color: #333;
 }
 
@@ -86,7 +86,7 @@
   background: #a5b4fc;
   cursor: not-allowed;
 }
-.submit-btn{
+.submit-btn {
   display: flex;
   margin: 0 auto;
 }
@@ -117,7 +117,7 @@
   background: #fff;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   text-align: center;
   width: 300px;
   max-width: 90%;
@@ -133,7 +133,8 @@
   justify-content: space-around;
 }
 
-.yes-btn, .no-btn {
+.yes-btn,
+.no-btn {
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
@@ -142,11 +143,11 @@
 }
 
 .yes-btn {
-  background-color: #2563EB;
+  background-color: #2563eb;
   color: white;
 }
 
 .no-btn {
-  background-color: #E5E7EB;
+  background-color: #e5e7eb;
   color: black;
 }

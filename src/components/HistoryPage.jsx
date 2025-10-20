@@ -64,8 +64,8 @@ const HistoryPage = () => {
               record.percent >= 80
                 ? "high"
                 : record.percent >= 50
-                ? "medium"
-                : "low";
+                  ? "medium"
+                  : "low";
 
             return (
               <tr key={index} onClick={() => setSelectedRecord(record)}>
@@ -95,10 +95,7 @@ const HistoryPage = () => {
       {/* Modal */}
       {selectedRecord && (
         <div className="modal-overlay" onClick={() => setSelectedRecord(null)}>
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h2>Quiz Details</h2>
             <p>
               <strong>Username:</strong> {selectedRecord.username}

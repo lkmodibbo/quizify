@@ -1,8 +1,8 @@
-import React from 'react';
-import '../components/styles/SignUp.css';
-import * as Yup from "yup"
-import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import "../components/styles/SignUp.css";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 
 const SignUpSchema = Yup.object({
   fullName: Yup.string()
@@ -12,7 +12,7 @@ const SignUpSchema = Yup.object({
     .email("Invalid email address")
     .required("email is required"),
   username: Yup.string()
-  .min(3, "username must be at least 3 characters")
+    .min(3, "username must be at least 3 characters")
     .required("Enter Your username"),
   password: Yup.string()
     .min(8, "Password must be at least 8 characters")
@@ -21,8 +21,8 @@ const SignUpSchema = Yup.object({
     .required("password is required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Password do not match")
-    .required("Confirm your password")
-  });
+    .required("Confirm your password"),
+});
 
 const SignUp = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const SignUp = ({ onSwitchToLogin }) => {
       username: "",
       email: "",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
     },
     validationSchema: SignUpSchema,
     onSubmit: (values, { resetForm }) => {
@@ -43,22 +43,22 @@ const SignUp = ({ onSwitchToLogin }) => {
         username: values.username,
         password: values.password,
         fullName: values.fullName,
-        email: values.email
+        email: values.email,
       };
 
-      localStorage.setItem("user", JSON.stringify(userData))
+      localStorage.setItem("user", JSON.stringify(userData));
 
-      alert("Sign-up successful")
+      alert("Sign-up successful");
       resetForm();
 
-      navigate("/")
-    }
-  })
+      navigate("/");
+    },
+  });
 
   return (
-    <form className='signup-form' onSubmit={formik.handleSubmit}>
+    <form className="signup-form" onSubmit={formik.handleSubmit}>
       <div>
-        <input 
+        <input
           type="text"
           id="fullName"
           name="fullName"
@@ -69,12 +69,12 @@ const SignUp = ({ onSwitchToLogin }) => {
           required
         />
         {formik.touched.fullName && formik.errors.fullName && (
-          <p className='error-text'>{formik.errors.fullName}</p>
+          <p className="error-text">{formik.errors.fullName}</p>
         )}
       </div>
 
       <div>
-        <input 
+        <input
           type="email"
           id="email"
           name="email"
@@ -85,26 +85,26 @@ const SignUp = ({ onSwitchToLogin }) => {
           required
         />
         {formik.touched.email && formik.errors.email && (
-          <p className='error-text'>{formik.errors.email}</p>
+          <p className="error-text">{formik.errors.email}</p>
         )}
       </div>
-        <div className='username'>
-        <input 
-          type='text' 
-          id='username'
-          name='username'
+      <div className="username">
+        <input
+          type="text"
+          id="username"
+          name="username"
           placeholder="username"
           value={formik.values.username}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           required
-          />
-          {formik.touched.username && formik.errors.username && (
-            <p className='error-text'>{formik.errors.username}</p>
-          )}
-        </div>
+        />
+        {formik.touched.username && formik.errors.username && (
+          <p className="error-text">{formik.errors.username}</p>
+        )}
+      </div>
       <div>
-        <input 
+        <input
           type="password"
           id="password"
           name="password"
@@ -115,12 +115,12 @@ const SignUp = ({ onSwitchToLogin }) => {
           required
         />
         {formik.touched.password && formik.errors.password && (
-          <p className='error-text'>{formik.errors.password}</p>
+          <p className="error-text">{formik.errors.password}</p>
         )}
       </div>
 
       <div>
-        <input 
+        <input
           type="password"
           id="confirmPassword"
           name="confirmPassword"
@@ -131,11 +131,13 @@ const SignUp = ({ onSwitchToLogin }) => {
           required
         />
         {formik.touched.confirmPassword && formik.errors.confirmPassword && (
-          <p className='error-text'>{formik.errors.confirmPassword}</p>
+          <p className="error-text">{formik.errors.confirmPassword}</p>
         )}
       </div>
-        <button type='submit' className='signin-btn'>Sign Up</button>
-      <p className='switch-text'>
+      <button type="submit" className="signin-btn">
+        Sign Up
+      </button>
+      <p className="switch-text">
         Already have an account?{" "}
         <span onClick={onSwitchToLogin}>Login here</span>
       </p>

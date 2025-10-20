@@ -35,7 +35,9 @@
   flex: 1 1 280px;
   max-width: 300px;
   padding: 25px 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   text-align: center;
 }
 

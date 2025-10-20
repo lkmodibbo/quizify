@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
-import { useFormik } from 'formik'
+import React, { useState } from "react";
+import { useFormik } from "formik";
 import * as Yup from "yup";
-import '../components/styles/Login.css'
-import { Link } from 'react-router-dom';
-
+import "../components/styles/Login.css";
+import { Link } from "react-router-dom";
 
 const LoginSchema = Yup.object({
   email: Yup.string()
@@ -11,41 +10,41 @@ const LoginSchema = Yup.object({
     .required("Email is required"),
   password: Yup.string()
     .min(8, "Password must be atleast 8 characters")
-    .required("password is required")
+    .required("password is required"),
 });
 
 const Login = ({ onSwitchToSignup }) => {
-  const [error, setError] = useState("")
+  const [error, setError] = useState("");
 
- const formik = useFormik({
+  const formik = useFormik({
     initialValues: {
       email: "",
-      password: ""
+      password: "",
     },
     validationSchema: LoginSchema,
     onSubmit: (values, { resetForm }) => {
-      localStorage.setItem("username", values.email)
-      const storedUser = JSON.parse(localStorage.getItem("user"))
+      localStorage.setItem("username", values.email);
+      const storedUser = JSON.parse(localStorage.getItem("user"));
       if (!storedUser) {
-        setError("No User Found. Please sign up first")
+        setError("No User Found. Please sign up first");
         return;
       }
 
       if (
-        values.username === storedUser.username && 
+        values.username === storedUser.username &&
         values.password === storedUser.password
       ) {
         localStorage.setItem("username", formik.values.username);
-        window.location.href = "/setup"
-        resetForm()
+        window.location.href = "/setup";
+        resetForm();
       } else {
-        setError("Invalid username or password")
+        setError("Invalid username or password");
       }
-      console.log("Login Submitted:", values) 
+      console.log("Login Submitted:", values);
 
-      localStorage.setItem("username", values.email)
-    }
- })
+      localStorage.setItem("username", values.email);
+    },
+  });
 
   const handleForgotPassword = (e) => {
     e.preventDefault();
@@ -54,13 +53,13 @@ const Login = ({ onSwitchToSignup }) => {
 
   return (
     <form className="login-form" onSubmit={formik.handleSubmit}>
-      {error && <p className='error-text'>{error}</p>}
-      
+      {error && <p className="error-text">{error}</p>}
+
       <div>
         <input
           type="email"
           id="email"
-          name="email"  
+          name="email"
           placeholder="Email or Username"
           value={formik.values.email}
           onChange={formik.handleChange}
@@ -68,7 +67,7 @@ const Login = ({ onSwitchToSignup }) => {
           required
         />
         {formik.touched.email && formik.errors.email && (
-          <p className='error-text'>{formik.errors.email}</p>
+          <p className="error-text">{formik.errors.email}</p>
         )}
       </div>
 
@@ -76,7 +75,7 @@ const Login = ({ onSwitchToSignup }) => {
         <input
           type="password"
           id="password"
-          name="password"  
+          name="password"
           placeholder="Password"
           value={formik.values.password}
           onChange={formik.handleChange}
@@ -84,21 +83,27 @@ const Login = ({ onSwitchToSignup }) => {
           required
         />
         {formik.touched.password && formik.errors.password && (
-          <p className='error-text'>{formik.errors.password}</p>
+          <p className="error-text">{formik.errors.password}</p>
         )}
         <p className="forget-password">
           Forgot your password?{" "}
-          <a href="#" onClick={handleForgotPassword}>Click here!</a>
+          <a href="#" onClick={handleForgotPassword}>
+            Click here!
+          </a>
         </p>
       </div>
 
-        <Link to="/setup" className='sign-in-link'>
-            <button className="sign-in" type="submit">Sign In</button>
-        </Link>
-        
+      <Link to="/setup" className="sign-in-link">
+        <button className="sign-in" type="submit">
+          Sign In
+        </button>
+      </Link>
+
       <p className="switch-text">
         Don’t have an account?{" "}
-        <a href="#" onClick={onSwitchToSignup}>Sign up here!</a>
+        <a href="#" onClick={onSwitchToSignup}>
+          Sign up here!
+        </a>
       </p>
     </form>
   );

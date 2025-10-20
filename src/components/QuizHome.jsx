@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import Login from '../components/Login';
-import SignUp from '../components/SignUp';
-import '../components/styles/QuizHome.css';
+import React, { useState } from "react";
+import Login from "../components/Login";
+import SignUp from "../components/SignUp";
+import "../components/styles/QuizHome.css";
 
 const QuizHome = () => {
   const [showLogin, setShowLogin] = useState(true);
@@ -18,7 +18,9 @@ const QuizHome = () => {
           <h1 className="header">QuizMaster</h1>
         </div>
 
-        <p className="subtitle">Challenge your mind. Master your knowledge. 🧠</p>
+        <p className="subtitle">
+          Challenge your mind. Master your knowledge. 🧠
+        </p>
 
         <div className="btns">
           <div className="switch-btns">

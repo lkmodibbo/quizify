@@ -6,24 +6,27 @@ This project is my **capstone project** to demonstrate frontend development skil
 ---
 
 ## ✨ Features
-- 📚 Multiple-choice questions with pagination  
-- ⚡ Fast and optimized with Vite  
-- 🎨 Modern and responsive UI (using custom CSS)  
-- 📊 Score calculation and result tracking  
-- 🌙 Light/Dark mode support  
-- 🔄 Smooth navigation and user-friendly experience  
+
+- 📚 Multiple-choice questions with pagination
+- ⚡ Fast and optimized with Vite
+- 🎨 Modern and responsive UI (using custom CSS)
+- 📊 Score calculation and result tracking
+- 🌙 Light/Dark mode support
+- 🔄 Smooth navigation and user-friendly experience
 
 ---
 
 ## 🛠️ Tech Stack
-- **Frontend:** React (Vite)  
-- **Styling:** CSS (custom)  
-- **State Management:** React Hooks / Context API  
-- **Version Control:** Git & GitHub  
+
+- **Frontend:** React (Vite)
+- **Styling:** CSS (custom)
+- **State Management:** React Hooks / Context API
+- **Version Control:** Git & GitHub
 
 ---
 
 ## 📂 Project Structure
+
 ```bash
 quizify/
 ├── public/              # Static files
@@ -35,3 +38,4 @@ quizify/
 │   ├── data/            # Question data (JSON/API)
 │   ├── App.jsx          # Root component
 │   └── main.jsx         # Entry point
+```

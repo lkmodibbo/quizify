@@ -4,7 +4,7 @@
   align-items: center;
   background: #f4f6fb;
   min-height: 100vh;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .setup-card {
@@ -134,7 +134,7 @@ select:focus {
   color: #0056b3;
   text-decoration: underline;
 }
-.back-to-login{
+.back-to-login {
   text-decoration: none;
 }
 .back-to-login:hover {

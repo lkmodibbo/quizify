@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import "./styles/Contact.css";
 
 const Contact = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
