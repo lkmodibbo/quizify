@@ -22,27 +22,6 @@ export default function SetupPage() {
       .required("Number of questions is required"),
   });
 
-  //   const category = getCategory(values.subject);
-  //   const url = `${BASE_URL}?amount=${values.numQuestions}&category=${category}&difficulty=${values.difficulty}&type=multiple`;
-
-  //   try {
-  //     const response = await fetch(url);
-  //     const data = await response.json();
-
-  //     if (!response.ok) {
-  //       throw new Error("Failed to fetch questions from API");
-  //     }
-  //     // Ensure the response structure is correct
-  //     if (!data.results) {
-  //       throw new Error("Invalid response format from API");
-  //     }
-
-  //     return data.results;
-  //   } catch (err) {
-  //     console.error("Error fetching questions:", err);
-  //     throw err;
-  //   }
-  // };
   const fetchQuestions = async (values) => {
     const category = getCategory(values.subject);
     const url = `${BASE_URL}?amount=${values.numQuestions}&category=${category}&difficulty=${values.difficulty}&type=multiple`;
@@ -159,6 +138,12 @@ export default function SetupPage() {
               <option value="basic-science">Basic Science</option>
               <option value="computer">Computer</option>
               <option value="social-values">National Values</option>
+              <option value="islamic">Islamic Studies</option>
+              <option value="phonics">Phonics</option>
+              <option value="basic-technology">Basic Techonology</option>
+              <option value="hausa">Hausa</option>
+              <option value="agric-science">Agricultural Science</option>
+              <option value="further-maths">Further Mathematics</option>
             </select>
             {formik.touched.subject && formik.errors.subject && (
               <div className="error">{formik.errors.subject}</div>

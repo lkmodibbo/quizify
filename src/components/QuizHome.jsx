@@ -19,7 +19,7 @@ const QuizHome = () => {
         </div>
 
         <p className="subtitle">
-          Challenge your mind. Master your knowledge. 🧠
+          Challenge your mind. Master your knowledge.
         </p>
 
         <div className="btns">

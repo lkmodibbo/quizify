@@ -64,10 +64,7 @@ function QuizPage() {
       "guest"
     ).toLowerCase();
 
-    // const storedUsername = storedUsernameRaw.trim().toLowerCase();
     storedUsername.charAt(0).toUpperCase() + storedUsername.slice(1);
-
-    // const storedUsername = localStorage.getItem("username") || settings?.username || "Guest";
 
     //  Get subject safely
     const subject = settings?.subject || "General";
@@ -136,12 +133,17 @@ function QuizPage() {
   if (!questions || questions.length === 0) {
     return <p className="loading">Loading questions...</p>;
   }
+  function capitalizeFirstLetter(text) {
+    if (!text) return '';
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
+  }
+   
   const currentQuestion = questions[currentIndex];
   return (
     <>
       <div className="quiz-container">
         <div className="quiz-header">
-          <h2>{settings?.subject?.toLowerCase()} quiz</h2>
+         <h2>{capitalizeFirstLetter(settings?.subject)} Quiz</h2>
           <div className="timer">
             ⏱{formatTime(timeLeft)} / {questions.length}:00
           </div>
