@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./styles/QuizPage.css";
+import { getCategoryName } from "./CartegoryUtils";
 
 function QuizPage() {
   const location = useLocation();
@@ -36,7 +37,7 @@ function QuizPage() {
     if (timeLeft === 0) {
       finishQuiz();
     }
-  }, [timeLeft]);
+  }, );
 
   useEffect(() => {
     if (questions && questions.length > 0) {
@@ -143,12 +144,11 @@ function QuizPage() {
     <>
       <div className="quiz-container">
         <div className="quiz-header">
-         <h2>{capitalizeFirstLetter(settings?.subject)} Quiz</h2>
+         <h2>{capitalizeFirstLetter(getCategoryName(Number(settings?.subject)))} Quiz</h2>
           <div className="timer">
             ⏱{formatTime(timeLeft)} / {questions.length}:00
           </div>
         </div>
-
         <div className="question-section">
           <h3>
             Question {currentIndex + 1}/{questions.length}

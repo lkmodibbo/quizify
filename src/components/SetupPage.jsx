@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import Navbar from "./Navbar";
 import "./styles/SetupPage.css";
+import { getCategoryName } from "./CartegoryUtils";
 
 export default function SetupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { settings } = location.state || {};
 
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   console.log("BASE_URL =", BASE_URL);
@@ -23,31 +24,22 @@ export default function SetupPage() {
   });
 
   const fetchQuestions = async (values) => {
-    const category = getCategory(values.subject);
-    const url = `${BASE_URL}?amount=${values.numQuestions}&category=${category}&difficulty=${values.difficulty}&type=multiple`;
-
+  const url = `${BASE_URL}?amount=${values.numQuestions}&category=${Number(values.subject)}&difficulty=${values.difficulty}&type=multiple`;
     try {
-      const response = await fetch(url);
-      const data = await response.json();
+    const response = await fetch(url);
+    const data = await response.json();
 
-      // If no questions found, try again with no difficulty filter
-      if (data.response_code === 1 || !data.results.length) {
-        const fallbackUrl = `${BASE_URL}?amount=${values.numQuestions}&category=${category}&type=multiple`;
-        const fallbackResponse = await fetch(fallbackUrl);
-        const fallbackData = await fallbackResponse.json();
-
-        if (!fallbackData.results.length) {
-          throw new Error("No questions found for this selection");
-        }
-        return fallbackData.results;
-      }
-
-      return data.results;
-    } catch (err) {
-      console.error("Error fetching questions:", err);
-      throw err;
+    if (data.response_code === 1 || !data.results.length) {
+      throw new Error("No questions found for this selection");
     }
-  };
+
+    return data.results;
+  } catch (err) {
+    console.error("Error fetching questions:", err);
+    throw err;
+  }
+};
+
 
   const formik = useFormik({
     initialValues: {
@@ -88,16 +80,35 @@ export default function SetupPage() {
     },
   });
 
-  const getCategory = (subject) => {
-    const categories = {
-      english: 10,
-      maths: 19,
-      "basic-science": 17,
-      computer: 18,
-      "social-values": 22,
-    };
-    return categories[subject] || 9;
-  };
+//   const getCategoryName = (id) => {
+//   const categories = {
+//     9: "General Knowledge",
+//     10: "Entertainment: Books",
+//     11: "Entertainment: Film",
+//     12: "Entertainment: Music",
+//     13: "Entertainment: Musicals & Theatres",
+//     14: "Entertainment: Television",
+//     15: "Entertainment: Video Games",
+//     16: "Entertainment: Board Games",
+//     17: "Science & Nature",
+//     18: "Science: Computers",
+//     19: "Science: Mathematics",
+//     20: "Mythology",
+//     21: "Sports",
+//     22: "Geography",
+//     23: "History",
+//     24: "Politics",
+//     25: "Art",
+//     26: "Celebrities",
+//     27: "Animals",
+//     28: "Vehicles",
+//     29: "Entertainment: Comics",
+//     30: "Science: Gadgets",
+//     31: "Entertainment: Japanese Anime & Manga",
+//     32: "Entertainment: Cartoon & Animations",
+//   };
+//   return categories[id] || "Unknown Category";
+// };
 
   const decodeHTML = (text) => {
     const textarea = document.createElement("textarea");
@@ -116,6 +127,7 @@ export default function SetupPage() {
         <h2 className="title">
           Welcome, {user?.username ? user.username : "Guest"}
         </h2>
+        <h2>{getCategoryName(Number(settings?.subject))} Quiz</h2>
         <div className="back-to-login">
           <p className="switch-text"></p>
           <p className="muted">Fill the form below to start your quiz.</p>
@@ -123,35 +135,44 @@ export default function SetupPage() {
 
         <form onSubmit={formik.handleSubmit} className="setup-form">
           <label>
-            Select Subject
-            <select
-              name="subject"
-              value={formik.values.subject}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            >
-              <option value="" disabled>
-                Select Subject
-              </option>
-              <option value="english">English</option>
-              <option value="maths">Mathematics</option>
-              <option value="basic-science">Basic Science</option>
-              <option value="computer">Computer</option>
-              <option value="social-values">National Values</option>
-              <option value="islamic">Islamic Studies</option>
-              <option value="phonics">Phonics</option>
-              <option value="basic-technology">Basic Techonology</option>
-              <option value="hausa">Hausa</option>
-              <option value="agric-science">Agricultural Science</option>
-              <option value="further-maths">Further Mathematics</option>
-            </select>
+                    Select Subject
+                  <select
+          name="subject"
+          value={formik.values.subject}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}>
+                <option value="" disabled>
+                  Select Subject
+        </option>
+        <option value="9">General Knowledge</option>
+        <option value="10">Entertainment: Books</option>
+        <option value="11">Entertainment: Film</option>
+        <option value="12">Entertainment: Music</option>
+        <option value="13">Entertainment: Musicals & Theatres</option>
+        <option value="14">Entertainment: Television</option>
+        <option value="15">Entertainment: Video Games</option>
+        <option value="16">Entertainment: Board Games</option>
+        <option value="17">Science & Nature</option>
+        <option value="18">Science: Computers</option>
+        <option value="19">Science: Mathematics</option>
+        <option value="20">Mythology</option>
+        <option value="21">Sports</option>
+        <option value="22">Geography</option>
+        <option value="23">History</option>
+        <option value="24">Politics</option>
+        <option value="25">Art</option>
+        <option value="26">Celebrities</option>
+        <option value="27">Animals</option>
+        <option value="28">Vehicles</option>
+        <option value="29">Entertainment: Comics</option>
+        <option value="30">Science: Gadgets</option>
+        <option value="31">Entertainment: Japanese Anime & Manga</option>
+        <option value="32">Entertainment: Cartoon & Animations</option>
+      </select>
+
             {formik.touched.subject && formik.errors.subject && (
               <div className="error">{formik.errors.subject}</div>
             )}
-          </label>
-
-          <label>
-            Difficulty
             <select
               name="difficulty"
               value={formik.values.difficulty}
@@ -161,7 +182,6 @@ export default function SetupPage() {
               <option value="" disabled>
                 Choose difficulty
               </option>
-              <option value="easy">Choose Difficulty</option>
               <option value="easy">Easy</option>
               <option value="medium">Medium</option>
               <option value="hard">Hard</option>
