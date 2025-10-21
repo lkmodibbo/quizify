@@ -1,4 +1,4 @@
-// categoryUtils.js
+
 export const getCategoryName = (id) => {
   const categories = {
     9: "General Knowledge",

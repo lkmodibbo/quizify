@@ -15,6 +15,7 @@ function QuizPage() {
   const [hasSaved, setHasSaved] = useState(false);
   const [unansweredCount, setUnansweredCount] = useState(false);
   const [showIncompleteModal, setShowIncompleteModal] = useState(0)
+  const [warningCount, setWarningCount] = useState(0);
   const [timeLeft, setTimeLeft] = useState(() => {
     const minutesPerQuestion = 1;
     const totalMinutes = (questions?.length || 10) * minutesPerQuestion;
@@ -39,6 +40,31 @@ function QuizPage() {
       finishQuiz();
     }
   }, );
+
+    useEffect(() => {
+      const handleVisibilityChange = () => {
+        if (document.hidden) {
+        setWarningCount((prev) => {
+          const newCount = prev + 1;
+
+          if (newCount < 3) {
+            alert((warningCount)`You left the tab! You have ${3 - newCount} warnings remaining.`)
+
+          } else {
+            alert("You have exceeded the maximum warnings. Your quiz will now be submitted.")
+            finishQuiz();
+          }
+          return newCount;
+        });
+        }
+      }
+
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      return () => {
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+     };
+
+   }, []);
 
   const formatTime = (seconds) => {
     const min = Math.floor(seconds / 60);

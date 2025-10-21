@@ -136,13 +136,13 @@ export default function SetupPage() {
         <form onSubmit={formik.handleSubmit} className="setup-form">
           <label>
                     Select Subject
-                  <select
+       <select
           name="subject"
           value={formik.values.subject}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}>
-                <option value="" disabled>
-                  Select Subject
+        <option value="" disabled>
+          Select Subject
         </option>
         <option value="9">General Knowledge</option>
         <option value="10">Entertainment: Books</option>
@@ -173,6 +173,9 @@ export default function SetupPage() {
             {formik.touched.subject && formik.errors.subject && (
               <div className="error">{formik.errors.subject}</div>
             )}
+          <option value="" disabled>
+             Choose Difficulty
+          </option>
             <select
               name="difficulty"
               value={formik.values.difficulty}
