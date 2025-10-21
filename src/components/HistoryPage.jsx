@@ -12,15 +12,6 @@ const HistoryPage = () => {
     setHistory(savedHistory);
   }, []);
 
-  // Delete a single record
-  // const handleDelete = (index) => {
-  //   if (window.confirm("Are you sure you want to delete this record?")) {
-  //     const updatedHistory = history.filter((_, i) => i !== index);
-  //     setHistory(updatedHistory);
-  //     localStorage.setItem("quizHistory", JSON.stringify(updatedHistory));
-  //   }
-  // };
-
   // Clear all history
   const handleClearHistory = () => {
     if (window.confirm("Are you sure you want to clear all quiz history?")) {

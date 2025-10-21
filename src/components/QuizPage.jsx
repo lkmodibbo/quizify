@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./styles/QuizPage.css";
 import { getCategoryName } from "./CartegoryUtils";
+import "./styles/QuizPage.css";
 
 function QuizPage() {
   const location = useLocation();
@@ -13,14 +13,15 @@ function QuizPage() {
   const [answers, setAnswers] = useState([]);
   const [showConfirm, setShowConfirm] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
-
+  const [unansweredCount, setUnansweredCount] = useState(false);
+  const [showIncompleteModal, setShowIncompleteModal] = useState(0)
   const [timeLeft, setTimeLeft] = useState(() => {
     const minutesPerQuestion = 1;
     const totalMinutes = (questions?.length || 10) * minutesPerQuestion;
     return totalMinutes * 60;
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!questions || questions.length === 0) {
       navigate("/");
     }
@@ -38,70 +39,6 @@ function QuizPage() {
       finishQuiz();
     }
   }, );
-
-  useEffect(() => {
-    if (questions && questions.length > 0) {
-      const minutesPerQuestion = 1;
-      const totalMinutes = questions.length * minutesPerQuestion;
-      setTimeLeft(totalMinutes * 60);
-    }
-  }, [questions]);
-
-  function finishQuiz() {
-    if (hasSaved) return;
-    setHasSaved(true);
-
-    const total = questions.length;
-    const correctCount = answers.filter(
-      (answer, index) => answer === questions[index].correct_answer,
-    ).length;
-    const wrongCount = total - correctCount;
-    const percent = Math.round((correctCount / total) * 100);
-
-    //  Get username from localStorage (fallback to Guest)
-    const storedUsername = (
-      localStorage.getItem("username") ||
-      settings?.username ||
-      "guest"
-    ).toLowerCase();
-
-    storedUsername.charAt(0).toUpperCase() + storedUsername.slice(1);
-
-    //  Get subject safely
-    const subject = settings?.subject || "General";
-
-    const quizResult = {
-      username: storedUsername,
-      subject,
-      total,
-      correct: correctCount,
-      wrong: wrongCount,
-      percent,
-      date: new Date().toLocaleString(),
-    };
-
-    // Save latest result in session
-    sessionStorage.setItem("lastQuiz", JSON.stringify(quizResult));
-
-    //  Load existing history
-    const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
-
-    //  Check for duplicates *before* pushing
-    const lastRecord = history[history.length - 1];
-    if (
-      !lastRecord ||
-      lastRecord.username !== quizResult.username ||
-      lastRecord.date !== quizResult.date
-    ) {
-      history.push(quizResult);
-      localStorage.setItem("quizHistory", JSON.stringify(history));
-      console.log("Quiz history saved:", quizResult);
-    } else {
-      console.log("Duplicate quiz detected — skipped saving");
-    }
-
-    navigate("/result", { state: quizResult });
-  }
 
   const formatTime = (seconds) => {
     const min = Math.floor(seconds / 60);
@@ -122,6 +59,8 @@ function QuizPage() {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
       setSelectedOption(null);
+    } else {
+      setShowConfirm(true);
     }
   };
 
@@ -131,31 +70,81 @@ function QuizPage() {
       setSelectedOption(null);
     }
   };
+
+  const handleManualSubmit = () => {
+    const unanswered = questions.length - answers.filter(Boolean).length;
+    setUnansweredCount(unanswered)
+
+    if (unanswered > 0) {
+      setShowIncompleteModal(true)
+    } else {
+      setShowConfirm(true)
+    }
+  }
+  function finishQuiz() {
+    if (hasSaved) return;
+    setHasSaved(true);
+
+    const total = questions.length;
+    const correctCount = answers.filter(
+      (answer, index) => answer === questions[index].correct_answer
+    ).length;
+
+    const quizResult = {
+      username:
+        (localStorage.getItem("username") || settings?.username || "Guest")
+          .toLowerCase()
+          .replace(/^\w/, (c) => c.toUpperCase()),
+      subject: getCategoryName(Number(settings?.subject)) || "General",
+      total,
+      correct: correctCount,
+      wrong: total - correctCount,
+      percent: Math.round((correctCount / total) * 100),
+      date: new Date().toLocaleString(),
+    };
+
+    const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+    history.push(quizResult);
+    localStorage.setItem("quizHistory", JSON.stringify(history));
+
+    navigate("/result", { state: quizResult });
+  }
+
   if (!questions || questions.length === 0) {
     return <p className="loading">Loading questions...</p>;
   }
-  function capitalizeFirstLetter(text) {
-    if (!text) return '';
-    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
-  }
-   
+
   const currentQuestion = questions[currentIndex];
+  const progress = ((currentIndex + 1) / questions.length) * 100;
+
   return (
-    <>
-      <div className="quiz-container">
+    <div className="quiz-wrapper">
+      <div className="quiz-card">
         <div className="quiz-header">
-         <h2>{capitalizeFirstLetter(getCategoryName(Number(settings?.subject)))} Quiz</h2>
-          <div className="timer">
-            ⏱{formatTime(timeLeft)} / {questions.length}:00
+          <button 
+            className="submit-btn"
+            onClick={handleManualSubmit}>
+            Submit
+          </button>
+          <h2 className="quiz-title">
+            {getCategoryName(Number(settings?.subject))} Quiz
+          </h2>
+          <div className="timer">⏱ {formatTime(timeLeft)}</div>
+          <div className="progress-bar">
+            <div
+              className="progress-fill"
+              style={{ width: `${progress}%` }}
+            ></div>
           </div>
         </div>
+
         <div className="question-section">
           <h3>
             Question {currentIndex + 1}/{questions.length}
           </h3>
           <p className="question-text">{currentQuestion.question}</p>
 
-          <div className="options">
+          <div className="options-grid">
             {currentQuestion.options.map((option, index) => (
               <button
                 key={index}
@@ -172,30 +161,26 @@ function QuizPage() {
 
         <div className="quiz-footer">
           <button
-            className="nav-btn"
+            className="nav-btn prev"
             onClick={handlePrev}
             disabled={currentIndex === 0}
           >
-            Prev
+            ← Previous
           </button>
           <button
-            className="nav-btn"
+            className="nav-btn next"
             onClick={handleNext}
             disabled={!selectedOption}
           >
-            {currentIndex === questions.length - 1 ? "Finish" : "Next"}
-          </button>
-        </div>
-        <div className="submit-btn">
-          <button className="quit-btn" onClick={() => setShowConfirm(true)}>
-            Submit Quiz
+            {currentIndex === questions.length - 1 ? "Finish" : "Next →"}
           </button>
         </div>
       </div>
+
       {showConfirm && (
         <div className="confirm-overlay">
           <div className="confirm-card">
-            <h3>Are you sure you want to submit your quiz</h3>
+            <h3>Are you sure you want to submit your quiz?</h3>
             <div className="confirm-actions">
               <button className="yes-btn" onClick={finishQuiz}>
                 Yes, Submit
@@ -207,7 +192,34 @@ function QuizPage() {
           </div>
         </div>
       )}
-    </>
+      {showIncompleteModal && (
+        <div className="confirm-overlay">
+          <div className="confirm-card">
+            <h3>You still have <span>{unansweredCount}</span>
+            unanswered {unansweredCount === 1 ? "questions" : "questions"}
+            </h3>
+            <p>Are you sure you want to submit now ?</p>
+            <div className="confirm-actions">
+              <button 
+                className="yes-btn"
+                onClick={() => {
+                  setShowIncompleteModal(false)
+                  finishQuiz()
+                }}
+              >
+                Yes, Submit
+              </button>
+              <button 
+                className="no-btn"
+                onClick={() => setShowIncompleteModal(false)}
+                >
+                No, Go Back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
