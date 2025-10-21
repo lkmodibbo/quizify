@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./styles/HistoryPage.css";
+import { getCategoryName } from "./CartegoryUtils";
 
 const HistoryPage = () => {
   const [history, setHistory] = useState([]);
@@ -12,13 +13,13 @@ const HistoryPage = () => {
   }, []);
 
   // Delete a single record
-  const handleDelete = (index) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
-      const updatedHistory = history.filter((_, i) => i !== index);
-      setHistory(updatedHistory);
-      localStorage.setItem("quizHistory", JSON.stringify(updatedHistory));
-    }
-  };
+  // const handleDelete = (index) => {
+  //   if (window.confirm("Are you sure you want to delete this record?")) {
+  //     const updatedHistory = history.filter((_, i) => i !== index);
+  //     setHistory(updatedHistory);
+  //     localStorage.setItem("quizHistory", JSON.stringify(updatedHistory));
+  //   }
+  // };
 
   // Clear all history
   const handleClearHistory = () => {
@@ -55,7 +56,6 @@ const HistoryPage = () => {
             <th>Questions</th>
             <th>Score (%)</th>
             <th>Date</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -71,28 +71,17 @@ const HistoryPage = () => {
               <tr key={index} onClick={() => setSelectedRecord(record)}>
                 <td>{index + 1}</td>
                 <td>{record.username}</td>
-                <td>{record.subject}</td>
+                <td>{getCategoryName(Number(record.subject))}</td>
                 <td>{record.total}</td>
                 <td className={scoreClass}>{record.percent}%</td>
                 <td>{record.date}</td>
-                <td>
-                  <button
-                    className="delete-btn"
-                    onClick={(e) => {
-                      e.stopPropagation(); // prevent modal open
-                      handleDelete(index);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </td>
+
               </tr>
             );
           })}
         </tbody>
       </table>
 
-      {/* Modal */}
       {selectedRecord && (
         <div className="modal-overlay" onClick={() => setSelectedRecord(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -104,7 +93,7 @@ const HistoryPage = () => {
               <strong>Email:</strong> {selectedRecord.email || "N/A"}
             </p>
             <p>
-              <strong>Subject:</strong> {selectedRecord.subject}
+              <strong>Subject:</strong> {getCategoryName(Number(selectedRecord.subject))}
             </p>
             <p>
               <strong>Questions Attempted:</strong> {selectedRecord.total}
