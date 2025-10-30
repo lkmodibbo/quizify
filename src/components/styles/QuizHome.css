@@ -38,10 +38,6 @@
   transition: all 0.3s ease;
 }
 
-.home-content:hover {
-  transform: translateY(-5px);
-}
-
 .logo-section {
   display: flex;
   align-items: center;
@@ -88,9 +84,9 @@ button {
   transition: background 0.3s ease;
 }
 
-button:hover {
+/* button:hover {
   background-color: #1d4ed8;
-}
+} */
 .form-container {
   background: rgba(255, 255, 255, 0.15);
   padding: 1.5rem;

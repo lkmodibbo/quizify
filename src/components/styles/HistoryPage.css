@@ -1,5 +1,3 @@
-/* HistoryPage.css */
-
 .history-container {
   max-width: 900px;
   margin: 2rem auto;
@@ -57,12 +55,12 @@
 }
 
 .medium {
-  color: #facc15; /* yellow */
+  color: #facc15; 
   font-weight: bold;
 }
 
 .low {
-  color: #dc2626; /* red */
+  color: #dc2626; 
   font-weight: bold;
 }
 
@@ -143,6 +141,6 @@
   cursor: pointer;
 }
 
-.modal-content button:hover {
+/* .modal-content button:hover {
   background: #1d4ed8;
-}
+} */

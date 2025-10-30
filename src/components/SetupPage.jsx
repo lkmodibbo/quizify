@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, } from "react-router-dom";
 import * as Yup from "yup";
 import "./styles/SetupPage.css";
-import { getCategoryName } from "./CartegoryUtils";
+// import { getCategoryName } from "./CartegoryUtils";
+import SelectDropdown from "./SelectDropdown";
 
 export default function SetupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { settings } = location.state || {};
+  // const location = useLocation();
+  // const { settings } = location.state || {};
 
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   console.log("BASE_URL =", BASE_URL);
@@ -40,13 +42,12 @@ export default function SetupPage() {
   }
 };
 
-
   const formik = useFormik({
     initialValues: {
       name: "",
       subject: "",
-      difficulty: "medium",
-      numQuestions: 5,
+      difficulty: "select",
+      numQuestions: 20,
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -80,36 +81,6 @@ export default function SetupPage() {
     },
   });
 
-//   const getCategoryName = (id) => {
-//   const categories = {
-//     9: "General Knowledge",
-//     10: "Entertainment: Books",
-//     11: "Entertainment: Film",
-//     12: "Entertainment: Music",
-//     13: "Entertainment: Musicals & Theatres",
-//     14: "Entertainment: Television",
-//     15: "Entertainment: Video Games",
-//     16: "Entertainment: Board Games",
-//     17: "Science & Nature",
-//     18: "Science: Computers",
-//     19: "Science: Mathematics",
-//     20: "Mythology",
-//     21: "Sports",
-//     22: "Geography",
-//     23: "History",
-//     24: "Politics",
-//     25: "Art",
-//     26: "Celebrities",
-//     27: "Animals",
-//     28: "Vehicles",
-//     29: "Entertainment: Comics",
-//     30: "Science: Gadgets",
-//     31: "Entertainment: Japanese Anime & Manga",
-//     32: "Entertainment: Cartoon & Animations",
-//   };
-//   return categories[id] || "Unknown Category";
-// };
-
   const decodeHTML = (text) => {
     const textarea = document.createElement("textarea");
     textarea.innerHTML = text;
@@ -127,87 +98,78 @@ export default function SetupPage() {
         <h2 className="title">
           Welcome, {user?.username ? user.username : "Guest"}
         </h2>
-        <h2>{getCategoryName(Number(settings?.subject))} Quiz</h2>
+        {/* <h2>{getCategoryName(Number(settings?.subject))} Quiz</h2> */}
         <div className="back-to-login">
           <p className="switch-text"></p>
           <p className="muted">Fill the form below to start your quiz.</p>
         </div>
 
         <form onSubmit={formik.handleSubmit} className="setup-form">
+            <SelectDropdown 
+              name="subject"
+              placeholder="Select Subject"
+              options={[
+                  { value: "9", label: "General Knowledge" },
+                  { value: "10", label: "Entertainment: Books" },
+                  { value: "11", label: "Entertainment: Film" },
+                  { value: "12", label: "Entertainment: Music" },
+                  { value: "13", label: "Entertainment: Musicals & Theatres" },
+                  { value: "14", label: "Entertainment: Television" },
+                  { value: "15", label: "Entertainment: Video Games" },
+                  { value: "16", label: "Entertainment: Board Games" },
+                  { value: "17", label: "Science & Nature" },
+                  { value: "18", label: "Science: Computers" },
+                  { value: "19", label: "Science: Mathematics" },
+                  { value: "20", label: "Mythology" },
+                  { value: "21", label: "Sports" },
+                  { value: "22", label: "Geography" },
+                  { value: "23", label: "History" },
+                  { value: "24", label: "Politics" },
+                  { value: "25", label: "Art" },
+                  { value: "26", label: "Celebrities" },
+                  { value: "27", label: "Animals" },
+                  { value: "28", label: "Vehicles" },
+                  { value: "29", label: "Entertainment: Comics" },
+                  { value: "30", label: "Science: Gadgets" },
+                  { value: "31", label: "Entertainment: Japanese Anime & Manga" },
+                  { value: "32", label: "Entertainment: Cartoon & Animations" },
+              ]}
+              value={formik.values.subject}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.subject}
+              touched={formik.touched.subject}
+            />
           <label>
-                    Select Subject
-       <select
-          name="subject"
-          value={formik.values.subject}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}>
-        <option value="" disabled>
-          Select Subject
-        </option>
-        <option value="9">General Knowledge</option>
-        <option value="10">Entertainment: Books</option>
-        <option value="11">Entertainment: Film</option>
-        <option value="12">Entertainment: Music</option>
-        <option value="13">Entertainment: Musicals & Theatres</option>
-        <option value="14">Entertainment: Television</option>
-        <option value="15">Entertainment: Video Games</option>
-        <option value="16">Entertainment: Board Games</option>
-        <option value="17">Science & Nature</option>
-        <option value="18">Science: Computers</option>
-        <option value="19">Science: Mathematics</option>
-        <option value="20">Mythology</option>
-        <option value="21">Sports</option>
-        <option value="22">Geography</option>
-        <option value="23">History</option>
-        <option value="24">Politics</option>
-        <option value="25">Art</option>
-        <option value="26">Celebrities</option>
-        <option value="27">Animals</option>
-        <option value="28">Vehicles</option>
-        <option value="29">Entertainment: Comics</option>
-        <option value="30">Science: Gadgets</option>
-        <option value="31">Entertainment: Japanese Anime & Manga</option>
-        <option value="32">Entertainment: Cartoon & Animations</option>
-      </select>
+            <SelectDropdown 
+              // label= "Difficulty"
+              name= "difficulty"
+              options={[
 
-            {formik.touched.subject && formik.errors.subject && (
-              <div className="error">{formik.errors.subject}</div>
-            )}
-          <option value="" disabled>
-             Choose Difficulty
-          </option>
-            <select
-              name="difficulty"
+                { value: "select", label: "Select Difficulty"},
+                { value: "easy", label: "Easy"},
+                { value: "medium", label: "Medium"},
+                { value: "hard", label: "Hard"}
+              ]}
               value={formik.values.difficulty}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-            >
-              <option value="" disabled>
-                Choose difficulty
-              </option>
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-            </select>
-            {formik.touched.difficulty && formik.errors.difficulty && (
-              <div className="error">{formik.errors.difficulty}</div>
-            )}
-          </label>
-
-          <label>
-            Number of questions
-            <input
-              type="number"
+              error={formik.errors.difficulty}
+              touched={formik.touched.difficulty}
+            />
+            <SelectDropdown 
+              // label= "Number of Questions"
               name="numQuestions"
-              min="1"
-              max="20"
+              options={Array.from({ length: 20}, (_, i) => ({
+                value: i + 1,
+                label: `${i + 1}`,
+              }))}
               value={formik.values.numQuestions}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              error={formik.errors.numQuestions}
+              touched={formik.touched.numQuestions}
             />
-            {formik.touched.numQuestions && formik.errors.numQuestions && (
-              <div className="error">{formik.errors.numQuestions}</div>
-            )}
           </label>
           <button type="submit" className="primary-btn" disabled={loading}>
             {loading ? "Loading..." : "Start Quiz"}

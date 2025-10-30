@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getCategoryName } from "./CartegoryUtils";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FcNext, FcPrevious } from "react-icons/fc";
 import "./styles/QuizPage.css";
+
 
 function QuizPage() {
   const location = useLocation();
@@ -13,9 +17,10 @@ function QuizPage() {
   const [answers, setAnswers] = useState([]);
   const [showConfirm, setShowConfirm] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
-  const [unansweredCount, setUnansweredCount] = useState(false);
-  const [showIncompleteModal, setShowIncompleteModal] = useState(0)
+  const [unansweredCount, setUnansweredCount] = useState(0);
+  const [showIncompleteModal, setShowIncompleteModal] = useState(false)
   const [warningCount, setWarningCount] = useState(0);
+  
   const [timeLeft, setTimeLeft] = useState(() => {
     const minutesPerQuestion = 1;
     const totalMinutes = (questions?.length || 10) * minutesPerQuestion;
@@ -33,7 +38,7 @@ function QuizPage() {
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [timeLeft]);
 
   useEffect(() => {
     if (timeLeft === 0) {
@@ -48,10 +53,9 @@ function QuizPage() {
           const newCount = prev + 1;
 
           if (newCount < 3) {
-            alert((warningCount)`You left the tab! You have ${3 - newCount} warnings remaining.`)
-
+            toast.warning(`You left the tab! You have ${3 - newCount} warnings remaining. `, {toastId: "tab-warning"});
           } else {
-            alert("You have exceeded the maximum warnings. Your quiz will now be submitted.")
+             toast.warning(`You have exceeded the maximum warnings. Your quiz will now be submitted.`);
             finishQuiz();
           }
           return newCount;
@@ -64,7 +68,7 @@ function QuizPage() {
         document.removeEventListener("visibilitychange", handleVisibilityChange);
      };
 
-   }, []);
+   });
 
   const formatTime = (seconds) => {
     const min = Math.floor(seconds / 60);
@@ -135,23 +139,25 @@ function QuizPage() {
 
     navigate("/result", { state: quizResult });
   }
-
   if (!questions || questions.length === 0) {
     return <p className="loading">Loading questions...</p>;
   }
-
   const currentQuestion = questions[currentIndex];
   const progress = ((currentIndex + 1) / questions.length) * 100;
 
   return (
+    
     <div className="quiz-wrapper">
+      <ToastContainer position="top-center" autoClose={3000} />
       <div className="quiz-card">
         <div className="quiz-header">
-          <button 
-            className="submit-btn"
+          <div className="quit-btn">
+             <button 
+            className="Quit-btn"
             onClick={handleManualSubmit}>
-            Submit
+            Quit
           </button>
+          </div>
           <h2 className="quiz-title">
             {getCategoryName(Number(settings?.subject))} Quiz
           </h2>
@@ -191,14 +197,22 @@ function QuizPage() {
             onClick={handlePrev}
             disabled={currentIndex === 0}
           >
-            ← Previous
+            <FcPrevious size={24} style={{ marginRight: "8px"}} />
+            Previous
           </button>
           <button
             className="nav-btn next"
             onClick={handleNext}
             disabled={!selectedOption}
           >
-            {currentIndex === questions.length - 1 ? "Finish" : "Next →"}
+            {currentIndex === questions.length - 1 ? (
+              "Finish"
+             ) : (
+              <>
+                Next
+                <FcNext color="#fff" size={24} style={{ marginLeft: "8px", color: "#fff"}}/>
+               </>
+              )}
           </button>
         </div>
       </div>
@@ -221,8 +235,8 @@ function QuizPage() {
       {showIncompleteModal && (
         <div className="confirm-overlay">
           <div className="confirm-card">
-            <h3>You still have <span>{unansweredCount}</span>
-            unanswered {unansweredCount === 1 ? "questions" : "questions"}
+            <h3>You still have <span>{unansweredCount} </span>
+             Unanswered {unansweredCount === 1 ? "questions" : "questions"}
             </h3>
             <p>Are you sure you want to submit now ?</p>
             <div className="confirm-actions">

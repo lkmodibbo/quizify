@@ -1,71 +1,91 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate, Navigate } from "react-router-dom";
 import "./styles/ResultPage.css";
 
 export default function ResultPage() {
   const location = useLocation();
   const navigate = useNavigate();
+
   const quizData =
     location.state || JSON.parse(sessionStorage.getItem("lastQuiz"));
 
-  if (!quizData) return <Navigate to="/setup" replace />;
-
-  const { total, percent, correct, wrong, settings } = quizData;
+  const username = localStorage.getItem("username") || "Guest";
+  const email = localStorage.getItem("email") || "N/A";
+  const { total, percent, correct, wrong, settings } = quizData || {};
   const subject = settings?.subject || "Unknown";
 
-  const username = localStorage.getItem("username") || "guest";
-  const email = localStorage.getItem("email") || "N/A";
+  //  Always call hook first (no early return above it)
+  useEffect(() => {
+    if (!quizData) return; // safe check inside effect
 
-  const quizResult = {
-    username,
-    email,
-    subject,
-    total,
-    correct,
-    wrong,
-    percent,
-    date: new Date().toLocaleString(),
+    if (!sessionStorage.getItem("quizSaved")) {
+      const existingHistory =
+        JSON.parse(localStorage.getItem("quizHistory")) || [];
+      const quizResult = {
+        username,
+        email,
+        subject,
+        total,
+        correct,
+        wrong,
+        percent,
+        date: new Date().toLocaleString(),
+      };
+      existingHistory.push(quizResult);
+      localStorage.setItem("quizHistory", JSON.stringify(existingHistory));
+      sessionStorage.setItem("quizSaved", "true");
+    }
+  }, [quizData, username, email, subject, total, correct, wrong, percent]);
+
+  //  Return redirect after hook
+  if (!quizData) return <Navigate to="/setup" replace />;
+
+  const getMessage = () => {
+    if (percent >= 80) return "🏆 Excellent work! You're a star student!";
+    if (percent >= 60) return "👏 Great job! Keep learning and improving!";
+    if (percent >= 40) return "💡 Nice try! A bit more effort and you’ll ace it!";
+    return "💪 Don’t give up! Practice makes perfect!";
   };
 
-  const existingHistory = JSON.parse(localStorage.getItem("quizHistory")) || [];
-  existingHistory.push(quizResult);
-  localStorage.setItem("quizHistory", JSON.stringify(existingHistory));
-
-  if (!sessionStorage.getItem("quizSaved")) {
-    existingHistory.push(quizResult);
-    localStorage.setItem("quizHistory", JSON.stringify(existingHistory));
-    sessionStorage.setItem("quizSaved", "true");
-  }
-
   return (
-    <div className="result-container">
-      {/* Remove the <header> here since Layout already shows navbar */}
+    <div className="result-page">
+      <div className="result-card">
+        <h1 className="result-title">Quiz Result</h1>
+        <p className="student-name">🎓 {username}</p>
+        <p className="subject-name">Subject: {subject}</p>
 
-      <main className="result-content">
-        <h2 className="score-text">You Scored {percent}%</h2>
-        <div className="progress-bar">
-          <div className="progress" style={{ width: `${percent}%` }}></div>
+        <div className="score-circle" style={{ "--percent": percent }}>
+          <div className="score-inner">{percent}%</div>
         </div>
 
-        <div className="stats-card">
-          <p className="total">Number of questions attempted: {total}</p>
-          <div className="stat-box correct">
-            ✅ Number of correct answers: {correct}
+        <p className="message">{getMessage()}</p>
+
+        <div className="stats-grid">
+          <div className="stat-card correct">
+            ✅ Correct Answers <span>{correct}</span>
           </div>
-          <div className="stat-box wrong">
-            ❌ Number of wrong answers: {wrong}
+          <div className="stat-card wrong">
+            ❌ Wrong Answers <span>{wrong}</span>
+          </div>
+          <div className="stat-card total">
+            📊 Total Questions <span>{total}</span>
+          </div>
+          <div className="stat-card score">
+            🧠 Score <span>{percent}%</span>
           </div>
         </div>
 
         <div className="actions">
-          <button className="retake-btn" onClick={() => navigate("/setup")}>
-            Retake the quiz
+          <button className="btn retake" onClick={() => navigate("/setup")}>
+            🔁 Retake Quiz
           </button>
-          <button className="history-btn" onClick={() => navigate("/history")}>
-            History
+          <button className="btn history" onClick={() => navigate("/history")}>
+            📜 View History
           </button>
         </div>
-      </main>
+
+        <p className="footer-note">Keep up the great work, {username}! 🌱</p>
+      </div>
     </div>
   );
 }
